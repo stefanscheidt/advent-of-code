@@ -1,0 +1,3 @@
+plugins {
+    `aoc-kotlin-conventions`
+}

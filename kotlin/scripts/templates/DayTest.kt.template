@@ -1,0 +1,17 @@
+package day%%DAY%%
+
+import org.junit.jupiter.api.Test
+
+class Day%%DAY%%Test {
+
+    @Test
+    fun `solve part one`() {
+        TODO()
+    }
+
+    @Test
+    fun `solve part two`() {
+        TODO()
+    }
+
+}
