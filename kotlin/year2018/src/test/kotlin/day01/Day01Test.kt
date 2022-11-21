@@ -19,63 +19,52 @@ class Day01Test {
     fun `solve part two`() {
         val input = File("./input/day01.txt").readLines().map(String::toInt)
 
-        findFrequencyImp2(input) shouldBe 709
+        findFrequencyFn(input) shouldBe 709
     }
 
-    @Test
-    fun `solve part two second example`() {
-        val input = listOf(+3, +3, +4, -2, -4)
-        val result = findFrequencyFn1(input)
-
-        result shouldBe 10
-    }
-
-    private fun findFrequencyImp1(input: List<Int>): Int {
-        val frequencies = mutableSetOf(0)
+    private fun findFrequencyImp(input: List<Int>): Int {
+        val seen = mutableSetOf(0)
         var sum = 0
         while (true) {
             for (i in input) {
                 sum += i
-                if (frequencies.contains(sum)) {
+                if (sum in seen) {
                     return sum
                 }
-                frequencies.add(sum)
+                seen.add(sum)
             }
         }
     }
 
-    private fun findFrequencyImp2(input: List<Int>): Int {
-        val frequencies = mutableSetOf(0)
-        var sum = 0
-        return input.repeat()
-            .map {
-                sum += it
-                sum
-            }
-            .first { !frequencies.add(it) }
+    private fun findFrequencyFn(input: List<Int>): Int =
+        input.repeat().scan(0, Int::plus).findFirstRepeatedOrNull2() ?: 0
+
+}
+
+private fun <T> List<T>.repeat(): Sequence<T> =
+    sequence {
+        if (isEmpty()) return@sequence
+        while (true) yieldAll(this@repeat)
     }
 
-    private fun findFrequencyFn1(input: List<Int>): Int {
-        data class Acc(val frequencies: List<Int> = listOf(0), val result: Int? = null)
-
-        return input.repeat()
-            .scan(Acc()) { acc, i ->
-                val next = acc.frequencies.last() + i
-                if (next in acc.frequencies)
-                    acc.copy(result = next)
-                else
-                    acc.copy(frequencies = acc.frequencies + next)
-            }
-            .map { it.result }
-            .first { it != null }
-            ?: 0
-    }
-
-
-    private fun <T> List<T>.repeat(): Sequence<T> =
-        sequence {
-            if (isEmpty()) return@sequence
-            while (true) yieldAll(this@repeat)
+private fun <T> Sequence<T>.findFirstRepeatedOrNull1(): T? {
+    tailrec fun go(xs: Iterator<T>, seen: MutableSet<T> = mutableSetOf()): T? {
+        if (!xs.hasNext()) return null
+        return when (val head = xs.next()) {
+            in seen -> head
+            else -> go(xs, seen.also { it.add(head) })
         }
+    }
 
+    return go(iterator())
+}
+
+private fun <T> Sequence<T>.findFirstRepeatedOrNull2(): T? {
+    val seen = mutableSetOf<T>()
+    val xs = iterator()
+    var x = xs.next()
+    while (seen.add(x)) {
+        x = xs.next()
+    }
+    return x
 }
