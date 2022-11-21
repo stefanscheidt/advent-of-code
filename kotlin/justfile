@@ -1,7 +1,7 @@
 #!/usr/bin/env just --justfile
 
 add-module module:
-  ./scipts/add-module.sh {{module}}
+  ./scripts/add-module.sh {{module}}
 
 list-dependency-updates module="":
   ./gradlew {{module}}:dependencyUpdates
