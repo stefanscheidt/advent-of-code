@@ -8,6 +8,6 @@ See [Structuring and Building a Software Component with Gradle](https://docs.gra
 
 ## Just Recipes
 
-Do `just --list` to see available [Just](https://just.systems/) recipes.
+Call `just` to see available [Just](https://just.systems/) recipes.
 
-
+Some recipes need the environment variable `AOC_SESSION` to be set with your [Advent of Code session cookie](https://www.reddit.com/r/adventofcode/comments/k8pem8/can_one_safely_programmatically_get_the_session/).

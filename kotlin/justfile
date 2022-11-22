@@ -1,13 +1,18 @@
 #!/usr/bin/env just --justfile
 
+_default:
+  @just --list
+
 add-module module:
   ./scripts/add-module.sh {{module}}
 
 list-dependency-updates module="":
   ./gradlew {{module}}:dependencyUpdates
 
+# Needs env var AOC_SESSION to be set.
 get-input year day:
   ./scripts/get-input.sh {{year}} {{day}}
 
+# Gets input and creates a test class. Needs env var AOC_SESSION to be set.
 init-day year day: (get-input year day)
   ./scripts/init-day.sh {{year}} {{day}}
