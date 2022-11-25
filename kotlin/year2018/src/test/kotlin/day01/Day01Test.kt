@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package day01
 
 import io.kotest.matchers.shouldBe
@@ -28,16 +30,13 @@ class Day01Test {
         while (true) {
             for (i in input) {
                 sum += i
-                if (sum in seen) {
-                    return sum
-                }
-                seen.add(sum)
+                if (!seen.add(sum)) return sum
             }
         }
     }
 
     private fun findFrequencyFn(input: List<Int>): Int =
-        input.repeat().scan(0, Int::plus).findFirstRepeatedOrNull2() ?: 0
+        input.repeat().scan(0, Int::plus).findFirstRepeatedOrNull() ?: 0
 
 }
 
@@ -47,7 +46,19 @@ private fun <T> List<T>.repeat(): Sequence<T> =
         while (true) yieldAll(this@repeat)
     }
 
-private fun <T> Sequence<T>.findFirstRepeatedOrNull1(): T? {
+private fun <T> Sequence<T>.findFirstRepeatedOrNull(): T? {
+    val seen = mutableSetOf<T>()
+    val xs = iterator()
+
+    var x = xs.next()
+    while (seen.add(x)) {
+        x = xs.next()
+    }
+
+    return x
+}
+
+private fun <T> Sequence<T>.findFirstRepeatedOrNullRecursive(): T? {
     tailrec fun go(xs: Iterator<T>, seen: MutableSet<T> = mutableSetOf()): T? {
         if (!xs.hasNext()) return null
         return when (val head = xs.next()) {
@@ -57,14 +68,4 @@ private fun <T> Sequence<T>.findFirstRepeatedOrNull1(): T? {
     }
 
     return go(iterator())
-}
-
-private fun <T> Sequence<T>.findFirstRepeatedOrNull2(): T? {
-    val seen = mutableSetOf<T>()
-    val xs = iterator()
-    var x = xs.next()
-    while (seen.add(x)) {
-        x = xs.next()
-    }
-    return x
 }
