@@ -1,17 +1,16 @@
 package day%%DAY%%
 
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class Day%%DAY%%Test {
 
     @Test
-    fun `solve part one`() {
-        TODO()
-    }
+    fun `solve puzzle`() {
+        val solution = solvePuzzle(file)
 
-    @Test
-    fun `solve part two`() {
-        TODO()
+        solution.first shouldBe 0
+        solution.second shouldBe 0
     }
 
 }
