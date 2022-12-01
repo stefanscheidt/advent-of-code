@@ -21,6 +21,23 @@ fun parseInput(lines: Sequence<String>): List<List<Int>> =
             it.split("|").map(String::toInt)
         }
 
+fun parseInputAsSequence(lines: Sequence<String>): Sequence<List<Int>> {
+    val iterator = lines.iterator()
+    val collector = mutableListOf<Int>()
+    return sequence {
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+            if (next.isNotBlank()) {
+                collector.add(next.toInt())
+            } else {
+                yield(collector.toList())
+                collector.clear()
+            }
+        }
+        yield(collector.toList())
+    }
+}
+
 fun List<List<Int>>.sortedSums(): List<Int> =
     map(List<Int>::sum).sorted().reversed()
 
