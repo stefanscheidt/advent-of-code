@@ -20,22 +20,11 @@ class Day01Test {
         9000
 
         10000
-    """.trimIndent().lineSequence()
+    """.trimIndent()
 
     @Test
     fun `parse sample input`() {
         parseInput(sampleInput) shouldBe listOf(
-            listOf(1000, 2000, 3000),
-            listOf(4000),
-            listOf(5000, 6000),
-            listOf(7000, 8000, 9000),
-            listOf(10000),
-        )
-    }
-
-    @Test
-    fun `parse sample input as sequence`() {
-        parseInputAsSequence(sampleInput).toList() shouldBe listOf(
             listOf(1000, 2000, 3000),
             listOf(4000),
             listOf(5000, 6000),
