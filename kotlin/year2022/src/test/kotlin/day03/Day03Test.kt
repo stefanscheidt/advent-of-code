@@ -16,9 +16,9 @@ class Day03Test {
 
     @Test
     fun `eval items`() {
-        "vJrwpWtwJgWrhcsFMMfFFhFp".eval() shouldBe 16
+        "vJrwpWtwJgWrhcsFMMfFFhFp".priority() shouldBe 16
 
-        sample.lines().sumOf(Inventory::eval) shouldBe 157
+        sample.lines().sumOf(Inventory::priority) shouldBe 157
     }
 
     @Test

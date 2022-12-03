@@ -17,17 +17,17 @@ fun solvePuzzle(file: File): Pair<Int, Int> {
     val inventories = file.readLines()
 
     val first = inventories
-        .sumOf { it.eval() }
+        .sumOf { it.priority() }
     val second = inventories.chunked(3)
         .map { it.badge() }
-        .sumOf { it.eval() }
+        .sumOf { it.priority() }
 
     return Pair(first, second)
 }
 
 typealias Item = Char
 
-fun Char.eval(): Int =
+fun Char.priority(): Int =
     if (isUpperCase()) {
         code - 'A'.code + 27
     } else {
@@ -42,8 +42,8 @@ fun Inventory.wrongPackedItem(): Item {
     return firstHalf.toSet().intersect(secondHalf.toSet()).first()
 }
 
-fun Inventory.eval(): Int =
-    wrongPackedItem().eval()
+fun Inventory.priority(): Int =
+    wrongPackedItem().priority()
 
 private fun List<Inventory>.badge(): Item =
     fold(emptySet<Char>()) { acc, items ->
