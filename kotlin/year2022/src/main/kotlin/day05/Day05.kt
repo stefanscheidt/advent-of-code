@@ -56,11 +56,6 @@ fun move9001(src: Stack<Char>, dest: Stack<Char>, amount: Int) {
 fun List<Stack<Char>>.top(): String =
     map(Stack<Char>::peek).joinToString("")
 
-fun parseInput(input: String): Pair<List<Stack<Char>>, List<Move>> {
-    val (stackInput, moveInput) = input.split("\n\n")
-    return Pair(parseStacks(stackInput), parseMoves(moveInput))
-}
-
 fun parseStacks(input: String): List<Stack<Char>> {
     val lines = input.lines()
         .takeWhile { it.trim().startsWith('[') }
