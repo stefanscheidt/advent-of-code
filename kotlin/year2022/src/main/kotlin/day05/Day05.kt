@@ -19,33 +19,32 @@ fun solvePuzzle(file: File): Pair<String, String> {
     val moves = parseMoves(input)
 
     val stacks1 = parseStacks(input)
-    stacks1.apply(moves, ::move9000)
+    stacks1.rearrange(moves, ::mover9000)
 
     val stacks2 = parseStacks(input)
-    stacks2.apply(moves, ::move9001)
+    stacks2.rearrange(moves, ::mover9001)
 
     return Pair(stacks1.top(), stacks2.top())
 }
 
+
+typealias Crate = Char
+
 data class Move(val src: Int, val dest: Int, val amount: Int)
 
-fun List<Stack<Char>>.apply(
+fun List<Stack<Crate>>.rearrange(
     moves: List<Move>,
-    action: (Stack<Char>, Stack<Char>, Int) -> Unit
+    action: (Stack<Crate>, Stack<Crate>, Int) -> Unit
 ) {
-    moves.forEach { move ->
-        val src = this[move.src]
-        val dest = this[move.dest]
-        action(src, dest, move.amount)
-    }
+    moves.forEach { action(this[it.src], this[it.dest], it.amount) }
 }
 
-fun move9000(src: Stack<Char>, dest: Stack<Char>, amount: Int) {
+fun mover9000(src: Stack<Crate>, dest: Stack<Crate>, amount: Int) {
     repeat(amount) { dest.push(src.pop()) }
 }
 
-fun move9001(src: Stack<Char>, dest: Stack<Char>, amount: Int) {
-    val temp = buildList<Char> {
+fun mover9001(src: Stack<Crate>, dest: Stack<Crate>, amount: Int) {
+    val temp = buildList<Crate> {
         repeat(amount) { add(src.pop()) }
     }
     temp.reversed().forEach {
@@ -53,19 +52,19 @@ fun move9001(src: Stack<Char>, dest: Stack<Char>, amount: Int) {
     }
 }
 
-fun List<Stack<Char>>.top(): String =
-    map(Stack<Char>::peek).joinToString("")
+fun List<Stack<Crate>>.top(): String =
+    map(Stack<Crate>::peek).joinToString("")
 
-fun parseStacks(input: String): List<Stack<Char>> {
+fun parseStacks(input: String): List<Stack<Crate>> {
     val lines = input.lines()
-        .takeWhile { it.trim().startsWith('[') }
+        .takeWhile { it.contains('[') }
         .reversed()
     val numberOfStacks = (lines.first().length + 1) / 4
     val stacks = List(numberOfStacks) { Stack<Char>() }
-    lines.forEach {
+    lines.forEach { line ->
         for (i in 0 until numberOfStacks) {
-            val char = it[4 * i + 1]
-            if (char != ' ') stacks[i].push(char)
+            val char = line[4 * i + 1]
+            if (char.isUpperCase()) stacks[i].push(char)
         }
     }
     return stacks
@@ -75,10 +74,10 @@ fun parseMoves(input: String): List<Move> =
     input.lines()
         .dropWhile { !it.startsWith("move") }
         .mapNotNull { line ->
-            moveRegex.matchEntire(line)?.let { matchResult ->
-                val (repeat, src, dest) = matchResult.destructured
+            instructionPattern.matchEntire(line)?.let { match ->
+                val (repeat, src, dest) = match.destructured
                 Move(src.toInt() - 1, dest.toInt() - 1, repeat.toInt())
             }
         }
 
-val moveRegex = """move\s+(\d+)\s+from\s+(\d+)\s+to\s+(\d+)""".toRegex()
+val instructionPattern = """move (\d+) from (\d+) to (\d+)""".toRegex()

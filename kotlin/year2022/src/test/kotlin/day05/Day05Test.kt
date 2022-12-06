@@ -19,7 +19,7 @@ class Day05Test {
     """.trimMargin()
 
     @Test
-    fun `parse sample input stacks`() {
+    fun `parse sample stacks input`() {
         parseStacks(sample) shouldBe listOf(
             stackOf('Z', 'N'),
             stackOf('M', 'C', 'D'),
@@ -28,7 +28,7 @@ class Day05Test {
     }
 
     @Test
-    fun `parse sample input moves`() {
+    fun `parse sample moves input`() {
         parseMoves(sample) shouldBe listOf(
             Move(1, 0, 1),
             Move(0, 2, 3),
@@ -38,10 +38,10 @@ class Day05Test {
     }
 
     @Test
-    fun `apply9000 sample moves to sample stacks`() {
+    fun `rearrange sample stacks with CrateMover 9000`() {
         val moves = parseMoves(sample)
         val stacks = parseStacks(sample)
-        stacks.apply(moves, ::move9000)
+        stacks.rearrange(moves, ::mover9000)
 
         stacks shouldBe listOf(
             stackOf('C'),
@@ -53,10 +53,10 @@ class Day05Test {
     }
 
     @Test
-    fun `apply9001 sample moves to sample stacks`() {
+    fun `rearrange sample stacks with CrateMover 9001`() {
         val moves = parseMoves(sample)
         val stacks = parseStacks(sample)
-        stacks.apply(moves, ::move9001)
+        stacks.rearrange(moves, ::mover9001)
 
         stacks shouldBe listOf(
             stackOf('M'),
