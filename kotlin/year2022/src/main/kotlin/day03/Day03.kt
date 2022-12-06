@@ -28,10 +28,10 @@ fun solvePuzzle(file: File): Pair<Int, Int> {
 typealias Item = Char
 
 fun Char.priority(): Int =
-    if (isUpperCase()) {
-        code - 'A'.code + 27
-    } else {
+    if (isLowerCase()) {
         code - 'a'.code + 1
+    } else {
+        code - 'A'.code + 27
     }
 
 typealias Inventory = String
@@ -45,7 +45,10 @@ fun Inventory.wrongPackedItem(): Item {
 fun Inventory.priority(): Int =
     wrongPackedItem().priority()
 
-private fun List<Inventory>.badge(): Item =
-    fold(emptySet<Char>()) { acc, items ->
-        if (acc.isEmpty()) items.toSet() else acc.intersect(items.toSet())
+private fun List<Inventory>.badge(): Item {
+    val head = first()
+    val tail = drop(1)
+    return tail.fold(head.toSet()) { acc, items ->
+        acc.intersect(items.toSet())
     }.first()
+}
