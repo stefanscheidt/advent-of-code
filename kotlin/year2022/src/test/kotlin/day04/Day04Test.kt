@@ -16,21 +16,21 @@ class Day04Test {
 
     @Test
     fun `one fully contains other`() {
-        oneFullyContainsOther(listOf(1..83, 1..84)) shouldBe true
+        oneFullyContainsOther(1..83, 1..84) shouldBe true
     }
 
     @Test
     fun `solve frist puzzle with sample`() {
         val ranges = parseInput(sample.lines())
 
-        ranges.count(::oneFullyContainsOther) shouldBe 2
+        ranges.count{ oneFullyContainsOther(it.first, it.second) } shouldBe 2
     }
 
     @Test
     fun `solve second puzzle with sample`() {
         val ranges = parseInput(sample.lines())
 
-        ranges.count(::overlap) shouldBe 4
+        ranges.count{ overlap(it.first, it.second) } shouldBe 4
     }
 
     @Test

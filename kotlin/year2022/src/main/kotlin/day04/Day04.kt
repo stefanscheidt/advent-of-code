@@ -17,22 +17,21 @@ fun solvePuzzle(file: File): Pair<Int, Int> {
     val lines = file.readLines()
 
     val ranges = parseInput(lines)
-    val first = ranges.count(::oneFullyContainsOther)
-    val second = ranges.count(::overlap)
+    val first = ranges.count { oneFullyContainsOther(it.first, it.second) }
+    val second = ranges.count { overlap(it.first, it.second) }
 
     return Pair(first, second)
 }
 
-fun parseInput(lines: List<String>): List<List<IntRange>> =
+fun parseInput(lines: List<String>): List<Pair<IntRange, IntRange>> =
     lines.map { line ->
-        line.split("[-,]".toRegex())
-            .chunked(2)
-            .map { it[0].toInt()..it[1].toInt() }
+        val (s1, e1, s2, e2) = line.split("-", ",").map { it.toInt() }
+        Pair(s1..e1, s2..e2)
     }
 
-fun oneFullyContainsOther(ranges: List<IntRange>): Boolean =
-    (ranges[0].first <= ranges[1].first && ranges[1].last <= ranges[0].last)
-            || (ranges[1].first <= ranges[0].first && ranges[0].last <= ranges[1].last)
+fun oneFullyContainsOther(range1: IntRange, range2: IntRange): Boolean =
+    (range2.first in range1 && range2.last in range1)
+            || (range1.first in range2 && range1.last in range2)
 
-fun overlap(ranges: List<IntRange>): Boolean =
-    ranges[0].intersect(ranges[1]).isNotEmpty()
+fun overlap(range1: IntRange, range2: IntRange): Boolean =
+    range1.intersect(range2).isNotEmpty()
