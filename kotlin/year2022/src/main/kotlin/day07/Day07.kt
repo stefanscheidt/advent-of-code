@@ -29,23 +29,24 @@ fun solvePartTwo(dirs: Map<String, Int>): Int {
 }
 
 fun parseInput(input: List<String>): Map<String, Int> {
-    val acc = input.fold(Acc()) { acc, line -> acc.accept(line) }
-    while (acc.path.peek() != "/") {
-        acc.accept("$ cd ..")
+    val acc = input.fold(Acc()) { acc, line ->
+        acc.accept(line)
     }
-
+    while (!acc.path.isRoot()) {
+        acc.accept(goUp)
+    }
     return acc.dirs.toMap()
 }
 
-private typealias Path = Stack<String>
+typealias Path = Stack<String>
 
-private fun Path.isRoot(): Boolean =
+fun Path.isRoot(): Boolean =
     peek() == separator
 
-private fun Path.absolute(): String =
+fun Path.absolute(): String =
     if (isRoot()) separator else toList().joinToString(separator).drop(1)
 
-private data class Acc(
+data class Acc(
     val path: Path = Stack<String>(),
     val dirs: MutableMap<String, Int> = mutableMapOf()
 ) {
@@ -57,13 +58,13 @@ private data class Acc(
 
     fun accept(line: String): Acc {
         when {
-            line == "$ cd .." -> {
-                val leavingDir = path.absolute()
+            line == goUp -> {
+                val oldDir = path.absolute()
                 path.pop()
-                addSize(dirs[leavingDir])
+                addSize(dirs[oldDir])
             }
 
-            line.startsWith("$ cd ") -> {
+            line.startsWith(changeDir) -> {
                 val newDir = line.split(" ").last()
                 path.push(newDir)
                 addSize(0)
@@ -84,6 +85,8 @@ private data class Acc(
 
 val filePattern = """(\d+) (\S+)""".toRegex()
 
-private const val separator = "/"
-private const val totalDiscSpace = 70_000_000
-private const val spaceNeeded = 30_000_000
+const val separator = "/"
+const val changeDir = "$ cd "
+const val goUp = "$ cd .."
+const val totalDiscSpace = 70_000_000
+const val spaceNeeded = 30_000_000
