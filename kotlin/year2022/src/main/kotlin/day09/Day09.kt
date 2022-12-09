@@ -3,6 +3,7 @@ package day09
 import common.geom.Point2D
 import common.geom.minus
 import common.geom.origin2D
+import common.geom.p
 import common.geom.plus
 import common.io.inputFile
 import java.io.File
@@ -29,7 +30,7 @@ fun solvePuzzle(file: File): Pair<Int, Int> {
 fun parseInput(input: List<String>): List<Motion> =
     input.map { line ->
         val (direction, steps) = line.split(" ")
-        Motion(direction.first(), steps.toInt())
+        Motion(Direction.valueOf(direction), steps.toInt())
     }
 
 fun solvePartOne(motions: List<Motion>): Int =
@@ -37,38 +38,34 @@ fun solvePartOne(motions: List<Motion>): Int =
         .trail(motions)
         .map { it.last() }
         .toSet()
-        .count()
+        .size
 
 fun solvePartTwo(motions: List<Motion>): Int =
     List(10) { origin2D }
         .trail(motions)
         .map { it.last() }
         .toSet()
-        .count()
+        .size
 
 
-typealias Direction = Char
-
-fun Direction.vector(): Point2D =
-    when (this) {
-        'R' -> Point2D(1, 0)
-        'L' -> Point2D(-1, 0)
-        'U' -> Point2D(0, 1)
-        'D' -> Point2D(0, -1)
-        else -> throw IllegalArgumentException("invald direction $this")
-    }
+enum class Direction(val vect: Point2D) {
+    R(p(1, 0)),
+    L(p(-1, 0)),
+    U(p(0, 1)),
+    D(p(0, -1))
+}
 
 data class Motion(val direction: Direction, val steps: Int)
 
 fun Point2D.move(direction: Direction): Point2D =
-    this + direction.vector()
+    this + direction.vect
 
 fun Point2D.follow(other: Point2D): Point2D {
     val (dx, dy) = other - this
     return if (dx.absoluteValue <= 1 && dy.absoluteValue <= 1) {
         this
     } else {
-        val vec = Point2D(
+        val vec = p(
             x = dx.sign * min(dx.absoluteValue, 1),
             y = dy.sign * min(dy.absoluteValue, 1),
         )
@@ -95,4 +92,3 @@ fun Rope.trail(motions: List<Motion>): List<Rope> =
         list.addAll(last.trail(motion))
         list
     }
-

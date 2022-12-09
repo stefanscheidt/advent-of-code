@@ -16,3 +16,6 @@ operator fun Int.times(point2D: Point2D): Point2D =
     point2D.copy(x = this * point2D.x, y = this *  point2D.y)
 
 val origin2D = Point2D(0, 0)
+
+fun p(x: Int, y: Int): Point2D =
+    Point2D(x, y)
