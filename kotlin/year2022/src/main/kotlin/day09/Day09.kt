@@ -23,9 +23,7 @@ fun main() {
 fun solvePuzzle(file: File): Pair<Int, Int> {
     val motions = parseInput(file.readLines())
 
-    val first = solvePartOne(motions)
-
-    return Pair(first, 0)
+    return Pair(solvePartOne(motions), solvePartTwo(motions))
 }
 
 fun solvePartOne(motions: List<Motion>): Int =
@@ -91,3 +89,34 @@ data class Rope(val head: Point2D, val tail: Point2D) {
         }
 
 }
+
+typealias LongRope = List<Point2D>
+
+fun LongRope.move(direction: Direction): LongRope {
+    val head = first()
+    val tail = drop(1)
+    val newHead = head.move(direction)
+    return tail.fold(mutableListOf(newHead)) { newRope, p ->
+        newRope.add(p.follow(newRope.last()))
+        newRope
+    }
+}
+
+fun LongRope.trail(motion: Motion): List<LongRope> =
+    generateSequence(this) { it.move(motion.direction) }
+        .take(motion.steps + 1)
+        .toList()
+
+fun LongRope.trail(motions: List<Motion>): List<LongRope> =
+    motions.fold(mutableListOf(this)) { list, motion ->
+        val last = list.removeLast()
+        list.addAll(last.trail(motion))
+        list
+    }
+
+fun solvePartTwo(motions: List<Motion>): Int =
+    List(10) { origin2D }
+        .trail(motions)
+        .map { it.last() }
+        .toSet()
+        .count()

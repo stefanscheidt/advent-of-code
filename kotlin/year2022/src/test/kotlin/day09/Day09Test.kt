@@ -39,8 +39,8 @@ class Day09Test {
     fun `solve puzzle`() {
         val solution = solvePuzzle(file)
 
-        solution.first shouldBe 0
-        solution.second shouldBe 6197
+        solution.first shouldBe 6197
+        solution.second shouldBe 2562
     }
 
 }
