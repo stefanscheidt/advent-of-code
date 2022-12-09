@@ -26,18 +26,26 @@ fun solvePuzzle(file: File): Pair<Int, Int> {
     return Pair(solvePartOne(motions), solvePartTwo(motions))
 }
 
-fun solvePartOne(motions: List<Motion>): Int =
-    Rope(origin2D, origin2D)
-        .trail(motions)
-        .map { it.tail }
-        .toSet()
-        .count()
-
 fun parseInput(input: List<String>): List<Motion> =
     input.map { line ->
         val (direction, steps) = line.split(" ")
         Motion(direction.first(), steps.toInt())
     }
+
+fun solvePartOne(motions: List<Motion>): Int =
+    List(2) { origin2D }
+        .trail(motions)
+        .map { it.last() }
+        .toSet()
+        .count()
+
+fun solvePartTwo(motions: List<Motion>): Int =
+    List(10) { origin2D }
+        .trail(motions)
+        .map { it.last() }
+        .toSet()
+        .count()
+
 
 typealias Direction = Char
 
@@ -68,55 +76,23 @@ fun Point2D.follow(other: Point2D): Point2D {
     }
 }
 
-data class Rope(val head: Point2D, val tail: Point2D) {
+typealias Rope = List<Point2D>
 
-    fun move(direction: Direction): Rope {
-        val newHead = head.move(direction)
-        val newTail = tail.follow(newHead)
-        return Rope(newHead, newTail)
-    }
-
-    fun trail(motion: Motion): List<Rope> =
-        generateSequence(this) { it.move(motion.direction) }
-            .take(motion.steps + 1)
-            .toList()
-
-    fun trail(motions: List<Motion>): List<Rope> =
-        motions.fold(mutableListOf(this)) { list, motion ->
-            val last = list.removeLast()
-            list.addAll(last.trail(motion))
-            list
-        }
-
-}
-
-typealias LongRope = List<Point2D>
-
-fun LongRope.move(direction: Direction): LongRope {
-    val head = first()
-    val tail = drop(1)
-    val newHead = head.move(direction)
-    return tail.fold(mutableListOf(newHead)) { newRope, p ->
+fun Rope.move(direction: Direction): Rope =
+    drop(1).fold(mutableListOf(first().move(direction))) { newRope, p ->
         newRope.add(p.follow(newRope.last()))
         newRope
     }
-}
 
-fun LongRope.trail(motion: Motion): List<LongRope> =
+fun Rope.trail(motion: Motion): List<Rope> =
     generateSequence(this) { it.move(motion.direction) }
         .take(motion.steps + 1)
         .toList()
 
-fun LongRope.trail(motions: List<Motion>): List<LongRope> =
+fun Rope.trail(motions: List<Motion>): List<Rope> =
     motions.fold(mutableListOf(this)) { list, motion ->
         val last = list.removeLast()
         list.addAll(last.trail(motion))
         list
     }
 
-fun solvePartTwo(motions: List<Motion>): Int =
-    List(10) { origin2D }
-        .trail(motions)
-        .map { it.last() }
-        .toSet()
-        .count()
