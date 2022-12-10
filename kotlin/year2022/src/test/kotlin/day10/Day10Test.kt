@@ -25,18 +25,39 @@ class Day10Test {
     @Test
     fun `solve part one with sample input`() {
         val instructions = parseInput(inputFile("sample10.txt").readLines())
+        val values = instructions.run()
 
-        val states = instructions.run()
+        values.signalStrength() shouldBe 13140
+    }
 
-        states.signalStrength() shouldBe 13140
+    @Test
+    fun `solve part two with sample input`() {
+        val instructions = parseInput(inputFile("sample10.txt").readLines())
+        val output = instructions.run().render()
+
+        output.trim() shouldBe """
+            ##..##..##..##..##..##..##..##..##..##..
+            ###...###...###...###...###...###...###.
+            ####....####....####....####....####....
+            #####.....#####.....#####.....#####.....
+            ######......######......######......####
+            #######.......#######.......#######.....
+        """.trimIndent()
     }
 
     @Test
     fun `solve puzzle`() {
         val solution = solvePuzzle(file)
 
-        solution.first shouldBe 0
-        solution.second shouldBe 0
+        solution.first shouldBe 16880
+        solution.second.trim() shouldBe """
+            ###..#..#..##..####..##....##.###..###..
+            #..#.#.#..#..#....#.#..#....#.#..#.#..#.
+            #..#.##...#..#...#..#..#....#.###..#..#.
+            ###..#.#..####..#...####....#.#..#.###..
+            #.#..#.#..#..#.#....#..#.#..#.#..#.#.#..
+            #..#.#..#.#..#.####.#..#..##..###..#..#.
+        """.trimIndent()
     }
 
 }
