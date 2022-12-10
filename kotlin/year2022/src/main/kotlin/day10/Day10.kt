@@ -15,48 +15,25 @@ fun main() {
 }
 
 fun solvePuzzle(file: File): Pair<Int, String> {
-    val instruction = parseInput(file.readLines())
-    val values = instruction.run()
-
-    return Pair(
-        values.signalStrength(),
-        values.render()
-    )
+    val values = file.readLines().run()
+    return Pair(values.signalStrength(), values.render())
 }
 
-fun parseInput(input: List<String>): List<Instruction> =
-    input.map(::parseInstruction)
+typealias Instruction = String
 
-fun parseInstruction(input: String): Instruction =
+fun Instruction.cycles(): Int =
     when {
-        input == "noop" -> Noop
-        input.startsWith("addx") -> Addx(input.split(" ")[1].toInt())
-        else -> throw IllegalArgumentException("invalid input $input")
+        this == "noop" -> 1
+        this.startsWith("addx") -> 2
+        else -> error("Unknown instruction $this")
     }
-
-sealed interface Instruction {
-    val cycles: Int
-    val value: Int
-}
-
-data class Addx(override val value: Int) : Instruction {
-    override val cycles: Int
-        get() = 2
-}
-
-object Noop : Instruction {
-    override val cycles: Int
-        get() = 1
-    override val value: Int
-        get() = 0
-}
 
 fun List<Instruction>.run(): List<Int> {
     val values = mutableListOf<Int>()
     var x = 1
     forEach { instruction ->
-        repeat(instruction.cycles) { values.add(x) }
-        if (instruction is Addx) x += instruction.value
+        repeat(instruction.cycles()) { values.add(x) }
+        if (instruction.startsWith("addx")) x += instruction.split(" ")[1].toInt()
     }
     return values
 }
