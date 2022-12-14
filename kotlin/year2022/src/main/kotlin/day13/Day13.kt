@@ -74,7 +74,7 @@ data class ListPacket(val elements: List<Packet>) : Packet() {
 object PacketGrammar : Grammar<Packet>() {
 
     private val comma by literalToken(",")
-    private val lbracket by regexToken("\\[")
+    private val lbracket by literalToken("[")
     private val rbracket by literalToken("]")
     private val num by regexToken("\\d+")
 
