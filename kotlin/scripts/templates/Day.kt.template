@@ -17,3 +17,7 @@ fun solvePuzzle(file: File): Pair<Int, Int> {
     TODO()
 }
 
+fun parseInput(input: String): Any {
+    TODO()
+}
+

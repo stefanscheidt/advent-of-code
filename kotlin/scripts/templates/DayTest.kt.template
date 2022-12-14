@@ -5,6 +5,19 @@ import org.junit.jupiter.api.Test
 
 class Day%%DAY%%Test {
 
+    private val sample = """
+    """.trimIndent()
+
+    @Test
+    fun `solve part one with sample input`() {
+        TODO()
+    }
+
+    @Test
+    fun `solve part two with sample input`() {
+        TODO()
+    }
+
     @Test
     fun `solve puzzle`() {
         val solution = solvePuzzle(file)
