@@ -24,6 +24,9 @@ repositories {
 }
 
 dependencies {
+    // https://github.com/h0tk3y/better-parse
+    implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
+
     // https://junit.org/junit5/docs/current/user-guide/
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
