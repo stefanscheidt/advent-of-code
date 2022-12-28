@@ -86,7 +86,8 @@ data class Stock(
     fun targetMineralUpperBound(timeLimit: Int): Int {
         val timeLeft = timeLimit - time
         val numberOfRobots = robots[targetMineral] ?: 0
-        return amountOfMineral(targetMineral) + (numberOfRobots..(numberOfRobots + timeLeft)).sum()
+        val upperBoundForFutureProduction = (numberOfRobots..(numberOfRobots + timeLeft)).sum()
+        return amountOfMineral(targetMineral) + upperBoundForFutureProduction
     }
 
     fun possibleFutureStocks(timeLimit: Int): List<Stock> {
@@ -102,39 +103,41 @@ data class Stock(
         return result
     }
 
-    private fun mineralsToBuildRobotAreOnStock(mineralToCollect: Mineral): Boolean =
-        blueprint.costsForRobots[mineralToCollect]?.map { it.key }?.all { (minerals[it] ?: 0) > 0 } ?: true
-
-    private fun robotIsNeeded(mineralToCollect: Mineral): Boolean =
-        mineralToCollect == targetMineral || (robots[mineralToCollect] ?: 0) < blueprint.maxCost(mineralToCollect)
-
     private fun robotShouldBeBuilt(mineralToCollect: Mineral): Boolean {
         return robotIsNeeded(mineralToCollect) && mineralsToBuildRobotAreOnStock(mineralToCollect)
     }
 
-    private fun minutesNeededToBuildRobot(blueprint: Blueprint, mineralToCollect: Mineral): Int {
+    private fun robotIsNeeded(mineralToCollect: Mineral): Boolean =
+        mineralToCollect == targetMineral || (robots[mineralToCollect] ?: 0) < blueprint.maxCost(mineralToCollect)
+
+    private fun mineralsToBuildRobotAreOnStock(mineralToCollect: Mineral): Boolean =
+        blueprint.costsForRobots[mineralToCollect]
+            ?.map { (mineral, _) -> amountOfMineral(mineral) }
+            ?.all { it > 0 } ?: true
+
+    private fun timeNeededToBuildRobot(mineralToCollect: Mineral): Int {
         val max = blueprint.costsForRobots[mineralToCollect]
             ?.maxOf { (mineral, cost) ->
-                val mineralOnStock = minerals[mineral] ?: 0
+                val amount = amountOfMineral(mineral)
                 val numberOfRobots = robots[mineral] ?: 0
-                if (mineralOnStock >= cost) 0
-                else ceil((cost - mineralOnStock).toFloat() / numberOfRobots.toFloat()).toInt()
+                if (amount >= cost) 0
+                else ceil((cost - amount).toFloat() / numberOfRobots.toFloat()).toInt()
             } ?: 0
         return max + 1
     }
 
     private fun stockAfterRobotWasBuilt(mineralToCollect: Mineral): Stock {
-        val minutesNeeded = minutesNeededToBuildRobot(blueprint, mineralToCollect)
+        val buildTime = timeNeededToBuildRobot(mineralToCollect)
         val stock = Stock(
             blueprint = blueprint,
             targetMineral = targetMineral,
-            time = time + minutesNeeded,
+            time = time + buildTime,
             robots = robots.mapValues { (mineral, amount) ->
                 if (mineral == mineralToCollect) amount + 1 else amount
             },
             minerals = minerals.mapValues { (mineral, amount) ->
                 val cost = blueprint.costsForRobots[mineralToCollect]?.get(mineral) ?: 0
-                amount - cost + minutesNeeded * (robots[mineral] ?: 0)
+                amount - cost + buildTime * (robots[mineral] ?: 0)
             }
         )
         return stock
