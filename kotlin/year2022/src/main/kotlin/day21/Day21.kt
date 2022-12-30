@@ -1,6 +1,10 @@
 package day21
 
 import common.io.inputFile
+import day21.Operator.Divided
+import day21.Operator.Minus
+import day21.Operator.Plus
+import day21.Operator.Times
 import java.io.File
 
 
@@ -18,6 +22,8 @@ fun solvePuzzle(file: File): Pair<Long, Long> {
     return Pair(solvePartOne(expressions), solvePartTwo(expressions))
 }
 
+// --- Parsing ---
+
 fun parseInput(input: List<String>): Map<String, Expression> {
     val expressions = input.map(::parseExpression).associateBy { it.id }
     expressions.values.filterIsInstance<Operation>().forEach { opration ->
@@ -27,23 +33,36 @@ fun parseInput(input: List<String>): Map<String, Expression> {
     return expressions
 }
 
-
 fun parseExpression(input: String): Expression {
     val (id, expression) = input.split(": ")
     val operationMatch = operationPattern.matchEntire(expression)
     return if (operationMatch != null) {
         val (leftId, operator, rightId) = operationMatch.destructured
-        Operation(id, leftId, rightId, operator)
+        Operation(id, leftId, rightId, parseOperator(operator))
     } else {
         Number(id, expression.toLong())
     }
 }
 
+fun parseOperator(input: String): Operator =
+    when (input) {
+        "+" -> Plus
+        "-" -> Minus
+        "*" -> Times
+        "/" -> Divided
+        else -> error("invalid operation $input")
+    }
+
+val operationPattern = """([a-z]{4}) ([+\-*/]) ([a-z]{4})""".toRegex()
+
+// --- Part One ---
+
 fun solvePartOne(expressions: Map<String, Expression>): Long =
     expressions["root"]?.eval() ?: 0
 
-fun solvePartTwo(expressions: Map<String, Expression>): Long =
-    expressions.solve("root", "humn")
+enum class Operator {
+    Plus, Minus, Times, Divided
+}
 
 sealed interface Expression {
     val id: String
@@ -58,7 +77,7 @@ data class Operation(
     override val id: String,
     val leftId: String,
     val rightId: String,
-    val operator: String
+    val operator: Operator
 ) :
     Expression {
     lateinit var left: Expression
@@ -66,71 +85,68 @@ data class Operation(
 
     override fun eval(): Long =
         when (operator) {
-            "+" -> left.eval() + right.eval()
-            "-" -> left.eval() - right.eval()
-            "*" -> left.eval() * right.eval()
-            "/" -> left.eval() / right.eval()
-            else -> error("invalid operation $operator")
+            Plus -> left.eval() + right.eval()
+            Minus -> left.eval() - right.eval()
+            Times -> left.eval() * right.eval()
+            Divided -> left.eval() / right.eval()
         }
 }
 
-val operationPattern = """([a-z]{4}) ([+\-*/]) ([a-z]{4})""".toRegex()
+// --- Part Two ---
 
-fun Expression.nodesBetween(to: Expression): Set<Expression> =
-    when (this) {
-        is Number -> if (this.id == to.id) setOf(this) else emptySet()
+fun solvePartTwo(expressions: Map<String, Expression>): Long {
+    val root = expressions["root"] ?: return 0
+    if (root !is Operation) return 0
+
+    val unknown = expressions["humn"] ?: return 0
+    if (unknown !is Number) return 0
+
+    val nodesBetween = nodesBetween(root, unknown)
+
+    return if (root.left in nodesBetween) {
+        root.left.solve(unknown, root.right.eval(), nodesBetween)
+    } else {
+        root.right.solve(unknown, root.left.eval(), nodesBetween)
+    }
+}
+
+fun nodesBetween(from: Expression, to: Expression): Set<Expression> =
+    when (from) {
+        is Number -> if (from.id == to.id) setOf(from) else emptySet()
         is Operation -> {
-            val nodesBetweenLeft = left.nodesBetween(to)
-            val nodesBetweenRight = right.nodesBetween(to)
+            val nodesBetweenLeft = nodesBetween(from.left, to)
+            val nodesBetweenRight = nodesBetween(from.right, to)
             when {
-                nodesBetweenLeft.isNotEmpty() -> nodesBetweenLeft + this
-                nodesBetweenRight.isNotEmpty() -> nodesBetweenRight + this
+                nodesBetweenLeft.isNotEmpty() -> nodesBetweenLeft + from
+                nodesBetweenRight.isNotEmpty() -> nodesBetweenRight + from
                 else -> emptySet()
             }
         }
     }
 
-fun Expression.solve(unknown: Number, nodes: Set<Expression>, other: Long): Long =
+fun Expression.solve(unknown: Number, other: Long, nodesBetween: Set<Expression>): Long =
     when (this) {
         is Number -> {
             if (this.id == unknown.id) other else value
         }
 
         is Operation -> {
-            if (left in nodes) {
-                val newOther = when(operator) {
-                    "+" -> other - right.eval()
-                    "-" -> other + right.eval()
-                    "*" -> other / right.eval()
-                    "/" -> other * right.eval()
-                    else -> error("invalid operation $operator")
+            if (left in nodesBetween) {
+                val newOther = when (operator) {
+                    Plus -> other - right.eval()
+                    Minus -> other + right.eval()
+                    Times -> other / right.eval()
+                    Divided -> other * right.eval()
                 }
-                left.solve(unknown, nodes, newOther)
+                left.solve(unknown, newOther, nodesBetween)
             } else {
-                val newOther = when(operator) {
-                    "+" -> other - left.eval()
-                    "-" -> left.eval() - other
-                    "*" -> other / left.eval()
-                    "/" -> left.eval() / other
-                    else -> error("invalid operation $operator")
+                val newOther = when (operator) {
+                    Plus -> other - left.eval()
+                    Minus -> left.eval() - other
+                    Times -> other / left.eval()
+                    Divided -> left.eval() / other
                 }
-                right.solve(unknown, nodes, newOther)
+                right.solve(unknown, newOther, nodesBetween)
             }
         }
     }
-
-fun Map<String, Expression>.solve(rootId: String, unknownId: String): Long {
-    val root = this[rootId] ?: return 0
-    if (root !is Operation) return 0
-
-    val unknown = this[unknownId] ?: return 0
-    if (unknown !is Number) return 0
-
-    val nodesBetween = root.nodesBetween(unknown)
-
-    return if (root.left in nodesBetween) {
-        root.left.solve(unknown, nodesBetween, root.right.eval())
-    } else {
-        root.right.solve(unknown, nodesBetween, root.left.eval())
-    }
-}

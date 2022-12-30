@@ -1,5 +1,6 @@
 package day21
 
+import day21.Operator.*
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import kotlin.test.fail
@@ -40,7 +41,7 @@ class Day21Test {
                 expression.id shouldBe "root"
                 expression.leftId shouldBe "pppw"
                 expression.rightId shouldBe "sjmn"
-                expression.operator shouldBe "+"
+                expression.operator shouldBe Plus
             }
 
             is Number -> fail()
@@ -51,7 +52,7 @@ class Day21Test {
     fun `evaluate operation`() {
         val left = Number("one", 1)
         val right = Number("right", 2)
-        val operation = Operation("op", "ignored", "ignored", "+")
+        val operation = Operation("op", "ignored", "ignored", Plus)
             .apply { this.left = left; this.right = right }
 
         operation.eval() shouldBe 3
