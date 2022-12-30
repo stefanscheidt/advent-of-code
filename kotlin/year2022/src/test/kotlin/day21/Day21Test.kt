@@ -40,7 +40,7 @@ class Day21Test {
                 expression.id shouldBe "root"
                 expression.leftId shouldBe "pppw"
                 expression.rightId shouldBe "sjmn"
-                expression.operator(1, 2) shouldBe 3
+                expression.operator shouldBe "+"
             }
 
             is Number -> fail()
@@ -51,7 +51,7 @@ class Day21Test {
     fun `evaluate operation`() {
         val left = Number("one", 1)
         val right = Number("right", 2)
-        val operation = Operation("op", "ignored", "ignored", Long::plus)
+        val operation = Operation("op", "ignored", "ignored", "+")
             .apply { this.left = left; this.right = right }
 
         operation.eval() shouldBe 3
@@ -64,7 +64,7 @@ class Day21Test {
 
     @Test
     fun `solve part two with sample input`() {
-        TODO()
+        solvePartTwo(parseInput(sample.lines())) shouldBe 301
     }
 
     @Test
@@ -72,7 +72,7 @@ class Day21Test {
         val solution = solvePuzzle(file)
 
         solution.first shouldBe 353837700405464L
-        solution.second shouldBe 0
+        solution.second shouldBe 3678125408017L
     }
 
 }
