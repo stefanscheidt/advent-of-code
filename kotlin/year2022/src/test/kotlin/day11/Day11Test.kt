@@ -99,8 +99,8 @@ class Day11Test {
     fun `solve puzzle`() {
         val solution = solvePuzzle(file)
 
-        solution.first shouldBe 111210
-        solution.second shouldBe 0
+        solution.first shouldBe 111210L
+        solution.second shouldBe 15447387620L
     }
 
 }
