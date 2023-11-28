@@ -1,9 +1,9 @@
-package day%%DAY%%
+package day01
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class Day%%DAY%%Test {
+class Day01Test {
 
     private val sample = """
     """.trimIndent()

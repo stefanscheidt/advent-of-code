@@ -1,10 +1,10 @@
-package day%%DAY%%
+package day01
 
 import common.io.inputFile
 import java.io.File
 
 
-val file = inputFile("day%%DAY%%.txt")
+val file = inputFile("day01.txt")
 
 fun main() {
     val solution = solvePuzzle(file)
