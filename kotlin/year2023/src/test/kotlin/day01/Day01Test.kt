@@ -29,12 +29,12 @@ class Day01Test {
 
     @Test
     fun `replace number words`() {
-        calibrationValue(replaceNumerals("eightwo")) shouldBe 82
+        calibrationValue(replaceNumerals(normalizeNumerals("eightwo"))) shouldBe 82
     }
 
     @Test
     fun `solve part two with sample input`() {
-        calibrationValue(sample2.lines().map(::replaceNumerals)) shouldBe 281
+        calibrationValue(sample2.lines().map(::normalizeNumerals).map(::replaceNumerals)) shouldBe 281
     }
 
     @Test
