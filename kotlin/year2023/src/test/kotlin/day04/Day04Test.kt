@@ -23,8 +23,9 @@ class Day04Test {
 
     @Test
     fun `solve part two with sample input`() {
+        val cards = parseInput(sample)
 
-        TODO()
+        scratchcardsWon(cards) shouldBe 30
     }
 
     @Test
@@ -32,7 +33,7 @@ class Day04Test {
         val solution = solvePuzzle(file)
 
         solution.first shouldBe "27845"
-        solution.second shouldBe ""
+        solution.second shouldBe "9496801"
     }
 
 }
