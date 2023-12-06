@@ -87,29 +87,6 @@ class Day05Test {
     }
 
     @Test
-    fun `mapped values of care instruction`() {
-        val input = """
-            seed-to-soil map:
-            50 98 2
-            52 50 48
-        """.trimIndent()
-
-        // CareInstruction(src=seed, dest=soil, mappings=[Mapping(range=50..97, offset=2), Mapping(range=98..99, offset=-48)])
-        val careInstruction = parseCareInstruction(input)
-
-        careInstruction.mappedValues(listOf((0L..49L))) shouldBe listOf(
-            (0L..49L)
-        )
-
-        careInstruction.mappedValues(listOf((0L..100))) shouldBe listOf(
-            (0L..49L),
-            (52L..99L),
-            (50L..51L),
-            (100L..100L)
-        )
-    }
-
-    @Test
     fun `compute target value`() {
         val input = splitInput(sample)
 

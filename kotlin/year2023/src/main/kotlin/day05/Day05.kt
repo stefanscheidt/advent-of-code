@@ -39,25 +39,8 @@ fun solvePartTwo(input: List<String>): Long {
     val seedValueRanges = parseSeedValueRanges(input.first())
     val instructions = parseCareInstructions(input.drop(1))
 
-    return runBlocking(Dispatchers.IO) {
+    return runBlocking(Dispatchers.Default) {
         instructions.minValueFor(seedValueRanges)
-    }
-}
-
-suspend fun CareInstructions.minValueFor(seedRanges: List<LongRange>): Long {
-    return coroutineScope {
-        seedRanges.map { range ->
-            async {
-                println("processing $range ...")
-                var result = Long.MAX_VALUE
-                for (value in range) {
-                    result = min(mappedValue(value), result)
-                }
-                result
-            }
-        }
-            .awaitAll()
-            .min()
     }
 }
 
@@ -94,11 +77,6 @@ data class CareInstruction(val src: String, val dest: String, val mappings: List
         mappings.find { srcValue in it.range }
             ?.let { mapping -> srcValue + mapping.offset }
             ?: srcValue
-
-    fun mappedValues(srcValues: List<LongRange>): List<LongRange> {
-        // TODO
-        return srcValues
-    }
 }
 
 typealias CareInstructions = Map<String, CareInstruction>
@@ -107,4 +85,21 @@ tailrec fun CareInstructions.mappedValue(scrValue: Long, src: String = "seed", d
     if (src == dest) return scrValue
     val instruction = get(src) ?: return scrValue
     return mappedValue(instruction.mappedValue(scrValue), instruction.dest, dest)
+}
+
+suspend fun CareInstructions.minValueFor(seedRanges: List<LongRange>): Long {
+    return coroutineScope {
+        seedRanges.map { range ->
+            async {
+                println("[${Thread.currentThread().name}] processing $range ...")
+                var result = Long.MAX_VALUE
+                for (value in range) {
+                    result = min(mappedValue(value), result)
+                }
+                result
+            }
+        }
+            .awaitAll()
+            .min()
+    }
 }
