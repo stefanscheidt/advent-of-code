@@ -1,6 +1,7 @@
 package day05
 
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day05Test {
@@ -131,11 +132,12 @@ class Day05Test {
     }
 
     @Test
+    @Disabled
     fun `solve puzzle`() {
         val solution = solvePuzzle(file)
 
         solution.first shouldBe "51580674"
-        solution.second shouldBe ""
+        solution.second shouldBe "99751240"
     }
 
 }

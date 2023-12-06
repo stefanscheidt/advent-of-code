@@ -1,7 +1,13 @@
 package day05
 
 import common.io.inputFile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import java.io.File
+import kotlin.math.min
 
 
 val file = inputFile("day05.txt")
@@ -15,25 +21,55 @@ fun main() {
 
 fun solvePuzzle(file: File): Pair<String, String> {
     val input = splitInput(file.readText())
-    return Pair("${solvePartOne(input)}", "${solvePartTwo(input)}")
+    val solutionOne = solvePartOne(input)
+    val solution = solvePartTwo(input)
+    return Pair("$solutionOne", "$solution")
 }
 
 fun splitInput(input: String): List<String> =
     input.split("""\s+\n""".toRegex()).filter(String::isNotBlank)
 
 fun solvePartOne(input: List<String>): Long? {
-    val seedValues = input.first().substringAfter("seeds: ").split(" ").map(String::toLong)
+    val seedValues = parseSeedValues(input.first())
     val instructions = parseCareInstructions(input.drop(1))
     return seedValues.minOfOrNull(instructions::mappedValue)
 }
 
 fun solvePartTwo(input: List<String>): Long {
-    val seedValueRanges = input.first().substringAfter("seeds: ").split(" ").map(String::toLong).chunked(2).map {
-        listOf((it[0] until it[0] + it[1]))
-    }
+    val seedValueRanges = parseSeedValueRanges(input.first())
     val instructions = parseCareInstructions(input.drop(1))
-    return seedValueRanges.minOf(instructions::minimumMappedValue)
+
+    return runBlocking(Dispatchers.IO) {
+        instructions.minValueFor(seedValueRanges)
+    }
 }
+
+suspend fun CareInstructions.minValueFor(seedRanges: List<LongRange>): Long {
+    return coroutineScope {
+        seedRanges.map { range ->
+            async {
+                println("processing $range ...")
+                var result = Long.MAX_VALUE
+                for (value in range) {
+                    result = min(mappedValue(value), result)
+                }
+                result
+            }
+        }
+            .awaitAll()
+            .min()
+    }
+}
+
+fun parseSeedValues(input: String): List<Long> =
+    input.substringAfter("seeds: ").split(" ").map(String::toLong)
+
+fun parseSeedValueRanges(input: String): List<LongRange> =
+    input.substringAfter("seeds: ")
+        .split(" ")
+        .map(String::toLong)
+        .chunked(2)
+        .map { (it[0] until it[0] + it[1]) }
 
 fun parseCareInstructions(input: List<String>): CareInstructions =
     input.map(::parseCareInstruction).associateBy { it.src }
@@ -71,10 +107,4 @@ tailrec fun CareInstructions.mappedValue(scrValue: Long, src: String = "seed", d
     if (src == dest) return scrValue
     val instruction = get(src) ?: return scrValue
     return mappedValue(instruction.mappedValue(scrValue), instruction.dest, dest)
-}
-
-tailrec fun CareInstructions.minimumMappedValue(srcValues: List<LongRange>, src: String = "seed", dest: String = "location"): Long {
-    if (src == dest) return srcValues.first().first
-    val instruction = get(src) ?: return srcValues.first().first
-    return minimumMappedValue(instruction.mappedValues(srcValues), instruction.dest, dest)
 }
