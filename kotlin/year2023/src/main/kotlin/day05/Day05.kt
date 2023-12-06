@@ -7,7 +7,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import java.io.File
-import kotlin.math.min
 
 
 val file = inputFile("day05.txt")
@@ -89,16 +88,13 @@ tailrec fun CareInstructions.mappedValue(scrValue: Long, src: String = "seed", d
 
 suspend fun CareInstructions.minValueFor(seedRanges: List<LongRange>): Long {
     return coroutineScope {
-        seedRanges.map { range ->
-            async {
-                println("[${Thread.currentThread().name}] processing $range ...")
-                var result = Long.MAX_VALUE
-                for (value in range) {
-                    result = min(mappedValue(value), result)
+        seedRanges
+            .map { range ->
+                async {
+                    println("[${Thread.currentThread().name}] processing $range ...")
+                    range.asSequence().map(::mappedValue).min()
                 }
-                result
             }
-        }
             .awaitAll()
             .min()
     }
