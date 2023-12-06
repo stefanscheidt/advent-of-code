@@ -20,9 +20,7 @@ fun main() {
 
 fun solvePuzzle(file: File): Pair<String, String> {
     val input = splitInput(file.readText())
-    val solutionOne = solvePartOne(input)
-    val solution = solvePartTwo(input)
-    return Pair("$solutionOne", "$solution")
+    return Pair("${solvePartOne(input)}", "${solvePartTwo(input)}")
 }
 
 fun splitInput(input: String): List<String> =
