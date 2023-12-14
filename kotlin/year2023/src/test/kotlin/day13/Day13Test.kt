@@ -1,5 +1,6 @@
 package day13
 
+import common.strings.rows
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 

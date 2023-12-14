@@ -1,6 +1,7 @@
 package day13
 
 import common.io.inputFile
+import common.strings.rows
 import java.io.File
 import kotlin.math.min
 
@@ -28,12 +29,6 @@ fun solvePartOne(patterns: List<String>): Int =
         val vertical = pattern.rows().mirrorCandidates().firstOrNull() ?: 0
         horizontal + 100 * vertical
     }
-
-fun String.rows(): List<String> {
-    val lines = lines()
-    return (0 until lines.first().length)
-        .map { column -> lines.map { it[column] }.joinToString(separator = "") }
-}
 
 fun String.mirrorCandidates(): Set<Int> =
     (1 until length)
