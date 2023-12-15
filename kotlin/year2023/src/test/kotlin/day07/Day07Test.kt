@@ -1,6 +1,9 @@
 package day07
 
-import day07.HandType.*
+import day07.HandType.K3
+import day07.HandType.K4
+import day07.HandType.P1
+import day07.HandType.P2
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
