@@ -62,7 +62,7 @@ class Day15Test {
 
     @Test
     fun `solve part two with sample input`() {
-        val commands = parseInput(sample).map(::parseCommand)
+        val commands = parseInput(sample).mapNotNull(::parseCommand)
         solvePartTwo(commands) shouldBe 145
     }
 

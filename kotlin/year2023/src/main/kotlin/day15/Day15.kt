@@ -18,7 +18,7 @@ fun parseInput(input: String): List<String> =
 
 fun solvePuzzle(file: File): Pair<String, String> {
     val input = parseInput(file.readText().trim())
-    val commands = input.map(::parseCommand)
+    val commands = input.mapNotNull(::parseCommand)
     return Pair("${solvePartOne(input)}", "${solvePartTwo(commands)}")
 }
 
@@ -42,18 +42,16 @@ data class AddOrReplace(override val label: String, val focalLength: Int) : Comm
 
 data class Remove(override val label: String) : Command
 
-fun parseCommand(input: String): Command {
-    fun err(): Nothing = error("invalid command [$input]")
-
+fun parseCommand(input: String): Command? {
     val commandRegex = """(?<label>\w+)(?<operation>[-=])(?<focalLength>\d)?""".toRegex()
-    val match = commandRegex.matchEntire(input) ?: err()
-    val label = match.groups["label"]?.value ?: err()
-    val operation = match.groups["operation"]?.value ?: err()
+    val match = commandRegex.matchEntire(input) ?: return null
+    val label = match.groups["label"]?.value ?: return null
+    val operation = match.groups["operation"]?.value ?: return null
     val focalLength = match.groups["focalLength"]?.value?.toInt()
     return when (operation) {
-        "=" -> AddOrReplace(label, focalLength ?: err())
+        "=" -> if (focalLength != null) AddOrReplace(label, focalLength) else null
         "-" -> Remove(label)
-        else -> err()
+        else -> null
     }
 }
 
