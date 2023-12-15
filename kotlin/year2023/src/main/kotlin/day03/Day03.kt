@@ -14,7 +14,7 @@ fun main() {
 }
 
 fun solvePuzzle(file: File): Pair<String, String> {
-    val schematic = file.readLines().filterNot(String::isBlank)
+    val schematic = Schematic(file.readLines().filterNot(String::isBlank))
     return Pair(
         "${schematic.partNumbers.sum()}",
         "${schematic.gearRatios.sum()}"
@@ -25,50 +25,56 @@ data class NumberPosition(val row: Int, val columns: IntRange)
 
 data class CharPosition(val row: Int, val column: Int)
 
-fun CharPosition.isAdjecent(number: NumberPosition): Boolean =
+fun CharPosition.isAdjacent(number: NumberPosition): Boolean =
     row in (number.row - 1..number.row + 1)
             && column in (number.columns.first - 1..number.columns.last + 1)
 
-typealias Schematic = List<String>
+data class Schematic(val lines: List<String>) {
 
-fun Schematic.valueAt(number: NumberPosition): Int =
-    this[number.row].substring(number.columns).toInt()
-
-val Schematic.numbers: List<NumberPosition>
-    get() = flatMapIndexed { rowIndex, line ->
-        numberRegex.findAll(line).map { NumberPosition(rowIndex, it.range) }.toList()
-    }
-
-val Schematic.symbols: List<CharPosition>
-    get() = findCharPositions { it.isSymbol() }
-
-val Schematic.stars: List<CharPosition>
-    get() = findCharPositions { it == '*' }
-
-fun Schematic.findCharPositions(predicate: (Char) -> Boolean): List<CharPosition> =
-    flatMapIndexed { rowIndex, line ->
-        line.mapIndexedNotNull { columnIndex, char ->
-            if (predicate(char)) CharPosition(rowIndex, columnIndex) else null
+    private val numbers: List<NumberPosition> by lazy {
+        lines.flatMapIndexed { rowIndex, line ->
+            numberRegex.findAll(line).map { NumberPosition(rowIndex, it.range) }.toList()
         }
     }
 
-val Schematic.partNumbers: List<Int>
-    get() = numbers
-        .filter { number -> symbols.any { symbol -> symbol.isAdjecent(number) } }
-        .map(::valueAt)
+    private val symbols: List<CharPosition> by lazy {
+        findCharPositions { it.isSymbol() }
+    }
 
-fun Schematic.adjecentNumbers(charPosition: CharPosition): List<NumberPosition> =
-    numbers.filter { number -> charPosition.isAdjecent(number) }
+    private val stars: List<CharPosition> by lazy {
+        findCharPositions { it == '*' }
+    }
 
-val Schematic.gearRatios: List<Int>
-    get() = stars
-        .mapNotNull { star ->
-            val adjecentNumbers = adjecentNumbers(star)
-            if (adjecentNumbers.size == 2)
-                valueAt(adjecentNumbers[0]) * valueAt(adjecentNumbers[1])
-            else
-                null
+    val partNumbers: List<Int> by lazy {
+        numbers
+            .filter { number -> symbols.any { symbol -> symbol.isAdjacent(number) } }
+            .map(::valueAt)
+    }
+
+    val gearRatios: List<Int> by lazy {
+        stars
+            .mapNotNull { star ->
+                val adjacentNumbers = adjacentNumbers(star)
+                if (adjacentNumbers.size == 2)
+                    valueAt(adjacentNumbers[0]) * valueAt(adjacentNumbers[1])
+                else
+                    null
+            }
+    }
+
+    private fun valueAt(number: NumberPosition): Int =
+        lines[number.row].substring(number.columns).toInt()
+
+    private fun findCharPositions(predicate: (Char) -> Boolean): List<CharPosition> =
+        lines.flatMapIndexed { rowIndex, line ->
+            line.mapIndexedNotNull { columnIndex, char ->
+                if (predicate(char)) CharPosition(rowIndex, columnIndex) else null
+            }
         }
+
+    private fun adjacentNumbers(charPosition: CharPosition): List<NumberPosition> =
+        numbers.filter { number -> charPosition.isAdjacent(number) }
+}
 
 fun Char.isSymbol(): Boolean =
     !(isDigit() || this == '.')

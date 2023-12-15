@@ -20,14 +20,14 @@ class Day03Test {
 
     @Test
     fun `solve part one with sample input`() {
-        val schematic = sample.lines().filterNot(String::isBlank)
+        val schematic = Schematic(sample.lines().filterNot(String::isBlank))
 
         schematic.partNumbers.sum() shouldBe 4361
     }
 
     @Test
     fun `solve part two with sample input`() {
-        val schematic = sample.lines().filterNot(String::isBlank)
+        val schematic = Schematic(sample.lines().filterNot(String::isBlank))
 
         schematic.gearRatios.sum() shouldBe 467835
     }
