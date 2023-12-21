@@ -48,9 +48,7 @@ fun parseModule(input: String): CommModule? {
     }
 }
 
-enum class Frequency {
-    High, Low
-}
+enum class Frequency { High, Low }
 
 data class Pulse(val src: String, val dest: String, val frequency: Frequency)
 
@@ -63,8 +61,6 @@ sealed class CommModule(val name: String, val destinations: List<String>) {
     protected fun emit(frequency: Frequency): List<Pulse> =
         destinations.map { dest -> Pulse(src = name, dest = dest, frequency = frequency) }
 
-    override fun toString(): String =
-        "${this::class.simpleName}(name = $name, destinations = $destinations"
 }
 
 // There is a single broadcast module (named broadcaster).
@@ -85,20 +81,20 @@ class FlipFlop(name: String, destinations: List<String>) : CommModule(name, dest
 
     enum class State(val frequency: Frequency) { On(High), Off(Low) }
 
-    private fun State.flip(): State =
-        when (this) {
-            On -> Off
-            Off -> On
-        }
-
     private var state = Off
 
     override fun receive(pulse: Pulse): List<Pulse> =
         if (pulse.frequency == High) {
             emptyList()
         } else {
-            state = state.flip()
+            state = flip(state)
             emit(state.frequency)
+        }
+
+    private fun flip(state: State): State =
+        when (state) {
+            On -> Off
+            Off -> On
         }
 
 }
@@ -118,10 +114,16 @@ class Conjunction(name: String, destinations: List<String>) : CommModule(name, d
     }
 
     override fun receive(pulse: Pulse): List<Pulse> {
-        sources[pulse.src] = pulse.frequency
-        val allHigh = sources.values.all { it == High }
-        return if (allHigh) emit(Low) else emit(High)
+        updateMemory(pulse)
+        return if (getAllHigh()) emit(Low) else emit(High)
     }
+
+    private fun updateMemory(pulse: Pulse) {
+        sources[pulse.src] = pulse.frequency
+    }
+
+    private fun getAllHigh(): Boolean =
+        sources.values.all { it == High }
 }
 
 typealias Configuration = Map<String, CommModule>
