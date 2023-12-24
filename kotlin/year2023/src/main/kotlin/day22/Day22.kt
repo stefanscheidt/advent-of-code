@@ -70,13 +70,17 @@ data class Brick(val xs: IntRange, val ys: IntRange, val zs: IntRange) {
      * @return Subset of passed in bricks that will fall when this gets disintegrated
      */
     fun disintegrate(bricks: List<Brick>): Set<Brick> {
-        tailrec fun go(bricks: Set<Brick>, others: Set<Brick>): Set<Brick> {
-            val unsupported = others.filter { brick -> brick.zs.first > 1 && others.none { it supports brick } }
-            return if (unsupported.isEmpty()) bricks else go(bricks + unsupported, others - bricks)
+        tailrec fun go(fallingBricks: Set<Brick>, otherBricks: Set<Brick>): Set<Brick> {
+            val unsupportedBricks = otherBricks.filter { brick ->
+                brick.zs.first > 1 && otherBricks.none { it supports brick }
+            }
+            return if (unsupportedBricks.isEmpty())
+                fallingBricks
+            else
+                go(fallingBricks + unsupportedBricks, otherBricks - fallingBricks)
         }
 
-        println("[${Thread.currentThread().name}] desintegrating $this ...")
-        return go(setOf(this), bricks.toSet() - this) - this
+        return go(emptySet(), bricks.toSet() - this)
     }
 
     private infix fun overlapps(other: Brick): Boolean =

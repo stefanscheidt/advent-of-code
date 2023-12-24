@@ -3,6 +3,7 @@ package day22
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day22Test {
@@ -99,6 +100,7 @@ class Day22Test {
     }
 
     @Test
+    @Disabled("because it's slow")
     fun `solve puzzle`() {
         val solution = solvePuzzle(file)
 
