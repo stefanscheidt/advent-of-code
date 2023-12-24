@@ -1,6 +1,6 @@
 package day09
 
-import common.geom.p
+import common.geom.p2
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -19,13 +19,13 @@ class Day09Test {
 
     @Test
     fun `tail follows head`() {
-        p(1, 1).follow(p(1, 1)) shouldBe p(1, 1)
-        p(1, 1).follow(p(2, 1)) shouldBe p(1, 1)
-        p(2, 1).follow(p(1, 2)) shouldBe p(2, 1)
+        p2(1, 1).follow(p2(1, 1)) shouldBe p2(1, 1)
+        p2(1, 1).follow(p2(2, 1)) shouldBe p2(1, 1)
+        p2(2, 1).follow(p2(1, 2)) shouldBe p2(2, 1)
 
-        p(1, 1).follow(p(3, 1)) shouldBe p(2, 1)
+        p2(1, 1).follow(p2(3, 1)) shouldBe p2(2, 1)
 
-        p(1, 1).follow(p(2, 3)) shouldBe p(2, 2)
+        p2(1, 1).follow(p2(2, 3)) shouldBe p2(2, 2)
     }
 
     @Test

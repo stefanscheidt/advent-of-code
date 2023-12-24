@@ -3,7 +3,7 @@ package day09
 import common.geom.Point2D
 import common.geom.minus
 import common.geom.origin2D
-import common.geom.p
+import common.geom.p2
 import common.geom.plus
 import common.io.inputFile
 import java.io.File
@@ -49,10 +49,10 @@ fun solvePartTwo(motions: List<Motion>): Int =
 
 
 enum class Direction(val vect: Point2D) {
-    R(p(1, 0)),
-    L(p(-1, 0)),
-    U(p(0, 1)),
-    D(p(0, -1))
+    R(p2(1, 0)),
+    L(p2(-1, 0)),
+    U(p2(0, 1)),
+    D(p2(0, -1))
 }
 
 data class Motion(val direction: Direction, val steps: Int)
@@ -65,7 +65,7 @@ fun Point2D.follow(other: Point2D): Point2D {
     return if (dx.absoluteValue <= 1 && dy.absoluteValue <= 1) {
         this
     } else {
-        val vec = p(
+        val vec = p2(
             x = dx.sign * min(dx.absoluteValue, 1),
             y = dy.sign * min(dy.absoluteValue, 1),
         )
