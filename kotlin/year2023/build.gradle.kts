@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation(project(":common"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
 }
