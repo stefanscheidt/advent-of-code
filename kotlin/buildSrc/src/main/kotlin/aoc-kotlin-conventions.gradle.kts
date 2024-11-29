@@ -3,13 +3,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain {
-        this.languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "17"
+    jvmToolchain(21)
 }
 
 tasks.test {
@@ -28,7 +22,7 @@ dependencies {
     implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
 
     // https://junit.org/junit5/docs/current/user-guide/
-    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation(platform("org.junit:junit-bom:5.11.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -36,8 +30,8 @@ dependencies {
     testImplementation(kotlin("test"))
 
     // https://kotest.io/docs/assertions/assertions.html
-    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 
     // https://mockk.io/
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("io.mockk:mockk:1.13.13")
 }
