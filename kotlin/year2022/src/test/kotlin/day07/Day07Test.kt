@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test
 
 class Day07Test {
 
-    private val sample = """
+  private val sample =
+    """
         $ cd /
         $ ls
         dir a
@@ -29,36 +30,32 @@ class Day07Test {
         8033020 d.log
         5626152 d.ext
         7214296 k
-    """.trimIndent()
+    """
+      .trimIndent()
 
-    @Test
-    fun `parse sample input`() {
-        parseInput(sample.lines()) shouldBe mapOf(
-            "/a" to 94853,
-            "/a/e" to 584,
-            "/d" to 24933642,
-            "/" to 48381165,
-        )
-    }
+  @Test
+  fun `parse sample input`() {
+    parseInput(sample.lines()) shouldBe
+      mapOf("/a" to 94853, "/a/e" to 584, "/d" to 24933642, "/" to 48381165)
+  }
 
-    @Test
-    fun `solve part one with sample input`() {
-        val dirs = parseInput(sample.lines())
-        solvePartOne(dirs) shouldBe 95437
-    }
+  @Test
+  fun `solve part one with sample input`() {
+    val dirs = parseInput(sample.lines())
+    solvePartOne(dirs) shouldBe 95437
+  }
 
-    @Test
-    fun `solve part two with sample input`() {
-        val dirs = parseInput(sample.lines())
-        solvePartTwo(dirs) shouldBe 24933642
-    }
+  @Test
+  fun `solve part two with sample input`() {
+    val dirs = parseInput(sample.lines())
+    solvePartTwo(dirs) shouldBe 24933642
+  }
 
-    @Test
-    fun `solve puzzle`() {
-        val solution = solvePuzzle(file)
+  @Test
+  fun `solve puzzle`() {
+    val solution = solvePuzzle(file)
 
-        solution.first shouldBe 1141028
-        solution.second shouldBe 8278005
-    }
-
+    solution.first shouldBe 1141028
+    solution.second shouldBe 8278005
+  }
 }

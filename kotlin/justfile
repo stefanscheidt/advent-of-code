@@ -16,3 +16,6 @@ get-input year day:
 # Gets input and creates a test class. Needs env var AOC_SESSION to be set.
 init-day year day: (get-input year day)
   ./scripts/init-day.sh {{year}} {{day}} && open https://adventofcode.com/{{year}}/day/{{day}}
+
+format:
+  ./gradlew spotlessApply

@@ -1,3 +1,1 @@
-plugins {
-    `aoc-kotlin-conventions`
-}
+plugins { `aoc-kotlin-conventions` }

@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test
 
 class Day14Test {
 
-    private val sample = """
+  private val sample =
+    """
         O....#....
         O.OO#....#
         .....##...
@@ -17,13 +18,15 @@ class Day14Test {
         .......O..
         #....###..
         #OO..#....
-    """.trimIndent()
+    """
+      .trimIndent()
 
-    @Test
-    fun `tilt north`() {
-        val rows = sample.rows()
+  @Test
+  fun `tilt north`() {
+    val rows = sample.rows()
 
-        val tilted = """
+    val tilted =
+      """
             OOOO.#.O..
             OO..#....#
             OO..O##..O
@@ -34,47 +37,53 @@ class Day14Test {
             ..O.......
             #....###..
             #....#....
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        rows.map(String::tiltStart) shouldBe tilted.rows()
-    }
+    rows.map(String::tiltStart) shouldBe tilted.rows()
+  }
 
-    @Test
-    fun `solve part one with sample input`() {
-        solvePartOne(sample) shouldBe 136
-    }
+  @Test
+  fun `solve part one with sample input`() {
+    solvePartOne(sample) shouldBe 136
+  }
 
-    @Test
-    fun `join lines`() {
-        val input = """
+  @Test
+  fun `join lines`() {
+    val input =
+      """
             abc
             def
             ghi
             jkl
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        val lines = input.lines()
+    val lines = input.lines()
 
-        lines.lineJoin() shouldBe input
-    }
+    lines.lineJoin() shouldBe input
+  }
 
-    @Test
-    fun `join rows`() {
-        val input = """
+  @Test
+  fun `join rows`() {
+    val input =
+      """
             abc
             def
             ghi
             jkl
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        val rows = input.rows()
+    val rows = input.rows()
 
-        rows.rowJoin() shouldBe input
-    }
+    rows.rowJoin() shouldBe input
+  }
 
-    @Test
-    fun `cycle around`() {
-        val afterOneCycle = """
+  @Test
+  fun `cycle around`() {
+    val afterOneCycle =
+      """
             .....#....
             ....#...O#
             ...OO##...
@@ -85,9 +94,11 @@ class Day14Test {
             ......OOOO
             #...O###..
             #..OO#....
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        val afterTwoCycles = """
+    val afterTwoCycles =
+      """
             .....#....
             ....#...O#
             .....##...
@@ -98,9 +109,11 @@ class Day14Test {
             .......OOO
             #..OO###..
             #.OOO#...O
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        val afterThreeCycles = """
+    val afterThreeCycles =
+      """
             .....#....
             ....#...O#
             .....##...
@@ -111,28 +124,28 @@ class Day14Test {
             .......OOO
             #...O###.O
             #.OOO#...O
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        val cycleOne = sample.cycle()
-        val cycleTwo = cycleOne.cycle()
-        val cycleThree = cycleTwo.cycle()
+    val cycleOne = sample.cycle()
+    val cycleTwo = cycleOne.cycle()
+    val cycleThree = cycleTwo.cycle()
 
-        cycleOne shouldBe afterOneCycle
-        cycleTwo shouldBe afterTwoCycles
-        cycleThree shouldBe afterThreeCycles
-    }
+    cycleOne shouldBe afterOneCycle
+    cycleTwo shouldBe afterTwoCycles
+    cycleThree shouldBe afterThreeCycles
+  }
 
-    @Test
-    fun `solve part two with sample input`() {
-        solvePartTwo(sample) shouldBe 64
-    }
+  @Test
+  fun `solve part two with sample input`() {
+    solvePartTwo(sample) shouldBe 64
+  }
 
-    @Test
-    fun `solve puzzle`() {
-        val solution = solvePuzzle(file)
+  @Test
+  fun `solve puzzle`() {
+    val solution = solvePuzzle(file)
 
-        solution.first shouldBe "106186"
-        solution.second shouldBe "106390"
-    }
-
+    solution.first shouldBe "106186"
+    solution.second shouldBe "106390"
+  }
 }

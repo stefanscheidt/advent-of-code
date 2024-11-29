@@ -3,24 +3,19 @@ package common.strings
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-
 class StringsTest {
 
-    @Test
-    fun `compute rows`() {
-        val s = """
+  @Test
+  fun `compute rows`() {
+    val s =
+      """
             ABC
             DE
             FGHI
             JKL
-        """.trimIndent()
+        """
+        .trimIndent()
 
-        s.rows() shouldBe listOf(
-            "ADFJ",
-            "BEGK",
-            "C HL",
-            "  I "
-        )
-    }
-
+    s.rows() shouldBe listOf("ADFJ", "BEGK", "C HL", "  I ")
+  }
 }

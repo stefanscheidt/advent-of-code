@@ -1,8 +1,6 @@
-plugins {
-    `aoc-kotlin-conventions`
-}
+plugins { `aoc-kotlin-conventions` }
 
 dependencies {
-    implementation(project(":common"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+  implementation(project(":common"))
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }

@@ -5,12 +5,11 @@ import org.junit.jupiter.api.Test
 
 class Day01Test {
 
-    @Test
-    fun `solve puzzle`() {
-        val solution = solvePuzzle(file)
+  @Test
+  fun `solve puzzle`() {
+    val solution = solvePuzzle(file)
 
-        solution.first shouldBe 500
-        solution.second shouldBe 709
-    }
-
+    solution.first shouldBe 500
+    solution.second shouldBe 709
+  }
 }

@@ -6,42 +6,43 @@ import org.junit.jupiter.api.Test
 
 class Day12Test {
 
-    private val sample = """
+  private val sample =
+    """
         Sabqponm
         abcryxxl
         accszExk
         acctuvwj
         abdefghi
-    """.trimIndent()
+    """
+      .trimIndent()
 
-    @Test
-    fun `parse input`() {
-        val heightmap = parseInput(sample.lines())
+  @Test
+  fun `parse input`() {
+    val heightmap = parseInput(sample.lines())
 
-        heightmap.start shouldBe Point2D(0, 0)
-        heightmap.dest shouldBe Point2D(5, 2)
-    }
+    heightmap.start shouldBe Point2D(0, 0)
+    heightmap.dest shouldBe Point2D(5, 2)
+  }
 
-    @Test
-    fun `solve part one for sample`() {
-        val heightmap = parseInput(sample.lines())
+  @Test
+  fun `solve part one for sample`() {
+    val heightmap = parseInput(sample.lines())
 
-        heightmap.shortestPathCostUp() shouldBe 31
-    }
+    heightmap.shortestPathCostUp() shouldBe 31
+  }
 
-    @Test
-    fun `solve part two for sample`() {
-        val heightmap = parseInput(sample.lines())
+  @Test
+  fun `solve part two for sample`() {
+    val heightmap = parseInput(sample.lines())
 
-        heightmap.shortestPathCostDown() shouldBe 29
-    }
+    heightmap.shortestPathCostDown() shouldBe 29
+  }
 
-    @Test
-    fun `solve puzzle`() {
-        val solution = solvePuzzle(file)
+  @Test
+  fun `solve puzzle`() {
+    val solution = solvePuzzle(file)
 
-        solution.first shouldBe 447
-        solution.second shouldBe 446
-    }
-
+    solution.first shouldBe 447
+    solution.second shouldBe 446
+  }
 }

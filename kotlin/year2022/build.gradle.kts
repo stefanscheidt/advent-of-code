@@ -1,7 +1,3 @@
-plugins {
-    `aoc-kotlin-conventions`
-}
+plugins { `aoc-kotlin-conventions` }
 
-dependencies {
-    implementation(project(":common"))
-}
+dependencies { implementation(project(":common")) }
