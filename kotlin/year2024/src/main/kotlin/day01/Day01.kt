@@ -14,7 +14,8 @@ fun main() {
 }
 
 fun solvePuzzle(file: File): Pair<String, String> {
-  return Pair(part1(file.readText()), part2(file.readText()))
+  val input = file.readText()
+  return Pair(part1(input), part2(input))
 }
 
 fun part1(input: String): String {
