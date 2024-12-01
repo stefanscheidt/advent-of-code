@@ -17,16 +17,18 @@ fun solvePuzzle(file: File): Pair<String, String> {
   return Pair(part1(file.readText()), part2(file.readText()))
 }
 
-fun part1(input: String): String =
-  inputLists(input)
-    .let { (list1, list2) -> list1.sorted().zip(list2.sorted()) }
-    .let { pairs -> pairs.map { (first, second) -> abs(first - second) } }
-    .let { distances -> "${distances.sum()}" }
+fun part1(input: String): String {
+  val (list1, list2) = inputLists(input)
+  val pairs = list1.sorted().zip(list2.sorted())
+  val distances = pairs.map { (first, second) -> abs(first - second) }
+  return "${distances.sum()}"
+}
 
-fun part2(input: String): String =
-  inputLists(input)
-    .let { (that, others) -> that.map { value -> value.score(others) } }
-    .let { scores -> "${scores.sum()}" }
+fun part2(input: String): String {
+  val (that, others) = inputLists(input)
+  val scores = that.map { value -> value.score(others) }
+  return "${scores.sum()}"
+}
 
 private fun Long.score(others: List<Long>): Long =
   this * others.count { other -> this == other }
