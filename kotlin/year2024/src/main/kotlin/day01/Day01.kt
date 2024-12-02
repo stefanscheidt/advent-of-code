@@ -7,10 +7,9 @@ import kotlin.math.abs
 val file = inputFile("day01.txt")
 
 fun main() {
-  val solution = solvePuzzle(file)
-
-  println("1: ${solution.first}")
-  println("2: ${solution.second}")
+  val (part1, part2) = solvePuzzle(file)
+  println("1: $part1")
+  println("2: $part2")
 }
 
 fun solvePuzzle(file: File): Pair<String, String> {
@@ -21,14 +20,14 @@ fun solvePuzzle(file: File): Pair<String, String> {
 fun part1(input: String): String {
   val (list1, list2) = inputLists(input)
   val pairs = list1.sorted().zip(list2.sorted())
-  val distances = pairs.map { (first, second) -> abs(first - second) }
-  return "${distances.sum()}"
+  val result = pairs.sumOf { (first, second) -> abs(first - second) }
+  return "$result"
 }
 
 fun part2(input: String): String {
   val (that, others) = inputLists(input)
-  val scores = that.map { value -> value.score(others) }
-  return "${scores.sum()}"
+  val result = that.sumOf { value -> value.score(others) }
+  return "$result"
 }
 
 private fun Long.score(others: List<Long>): Long = this * others.count { other -> this == other }
