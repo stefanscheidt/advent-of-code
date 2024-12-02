@@ -31,20 +31,19 @@ fun part2(input: String): String {
   return "${scores.sum()}"
 }
 
-private fun Long.score(others: List<Long>): Long =
-  this * others.count { other -> this == other }
+private fun Long.score(others: List<Long>): Long = this * others.count { other -> this == other }
 
 private fun inputLists(input: String): Pair<List<Long>, List<Long>> =
-  input.lines()
+  input
+    .lines()
     .filterNot(String::isBlank)
     .map { line -> line.split("""\s+""".toRegex()).map(String::toLong) }
     .toPairOfLists()
 
 private fun List<List<Long>>.toPairOfLists(): Pair<List<Long>, List<Long>> =
-  Pair(mutableListOf<Long>(), mutableListOf<Long>())
-    .apply {
-      forEach { pair ->
-        first += pair[0]
-        second += pair[1]
-      }
+  Pair(mutableListOf<Long>(), mutableListOf<Long>()).apply {
+    forEach { pair ->
+      first += pair[0]
+      second += pair[1]
     }
+  }
