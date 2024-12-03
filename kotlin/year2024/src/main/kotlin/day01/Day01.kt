@@ -26,23 +26,18 @@ fun part1(input: String): String {
 
 fun part2(input: String): String {
   val (that, others) = inputLists(input)
-  val result = that.sumOf { value -> value.score(others) }
+  val frequencies = others.groupingBy { it }.eachCount()
+  val result = that.sumOf { value -> value * frequencies.getOrDefault(value, 0) }
   return "$result"
 }
-
-private fun Long.score(others: List<Long>): Long = this * others.count { other -> this == other }
 
 private fun inputLists(input: String): Pair<List<Long>, List<Long>> =
   input
     .lines()
     .filterNot(String::isBlank)
-    .map { line -> line.split("""\s+""".toRegex()).map(String::toLong) }
-    .toPairOfLists()
-
-private fun List<List<Long>>.toPairOfLists(): Pair<List<Long>, List<Long>> =
-  Pair(mutableListOf<Long>(), mutableListOf<Long>()).apply {
-    forEach { pair ->
-      first += pair[0]
-      second += pair[1]
+    .map { line ->
+      val (fst, snd) = line.split("""\s+""".toRegex())
+      Pair(fst.toLong(), snd.toLong())
     }
-  }
+    .unzip()
+
