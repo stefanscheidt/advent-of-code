@@ -34,9 +34,9 @@ fun part2(input: String): String {
 data class State(val isEnabled: Boolean = true, val sum: Long = 0L) {
   fun apply(operation: Operation): State =
     when (operation) {
-      is Do -> this.copy(isEnabled = true)
-      is Dont -> this.copy(isEnabled = false)
-      is Mult -> if (this.isEnabled) this.copy(sum = this.sum + operation.eval()) else this
+      is Do -> copy(isEnabled = true)
+      is Dont -> copy(isEnabled = false)
+      is Mult -> if (isEnabled) this.copy(sum = sum + operation.eval()) else this
     }
 }
 
