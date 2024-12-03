@@ -27,14 +27,17 @@ fun part2(input: String): String {
   return Regex("""mul\((\d*),(\d*)\)|do\(\)|don't\(\)""")
     .findAll(input)
     .mapNotNull { it.toOperation() }
-    .fold(State()) { state, operation ->
-      when (operation) {
-        is Do -> state.enabled()
-        is Dont -> state.disabled()
-        is Mult -> state.add(operation.eval())
-      }
-    }
+    .fold(State()) { state, operation -> state.apply(operation) }
     .let { "${it.sum}" }
+}
+
+data class State(val isEnabled: Boolean = true, val sum: Long = 0L) {
+  fun apply(operation: Operation): State =
+    when (operation) {
+      is Do -> this.copy(isEnabled = true)
+      is Dont -> this.copy(isEnabled = false)
+      is Mult -> if (this.isEnabled) this.copy(sum = this.sum + operation.eval()) else this
+    }
 }
 
 sealed interface Operation {
@@ -56,11 +59,3 @@ fun MatchResult.toOperation(): Operation? =
     value.startsWith("mul(") -> Mult(groupValues[1].toLong(), groupValues[2].toLong())
     else -> null
   }
-
-data class State(val isEnabled: Boolean = true, val sum: Long = 0L) {
-  fun enabled(): State = copy(isEnabled = true)
-
-  fun disabled(): State = copy(isEnabled = false)
-
-  fun add(value: Long) = if (isEnabled) copy(sum = sum + value) else this
-}
