@@ -19,14 +19,14 @@ fun solvePuzzle(file: File): Pair<String, String> {
 fun part1(input: String): String =
   Regex("""mul\((\d*),(\d*)\)""")
     .findAll(input)
-    .map { it.toOperation() }
+    .mapNotNull { it.toOperation() }
     .sumOf { it.eval() }
     .let(Long::toString)
 
 fun part2(input: String): String {
   return Regex("""mul\((\d*),(\d*)\)|do\(\)|don't\(\)""")
     .findAll(input)
-    .map { it.toOperation() }
+    .mapNotNull { it.toOperation() }
     .fold(State()) { state, operation ->
       when (operation) {
         is Do -> state.enabled()
@@ -49,12 +49,12 @@ data class Mult(val op1: Long, val op2: Long) : Operation {
   override fun eval(): Long = op1 * op2
 }
 
-fun MatchResult.toOperation(): Operation =
+fun MatchResult.toOperation(): Operation? =
   when {
     value.startsWith("do(") -> Do
     value.startsWith("don't(") -> Dont
-    value.startsWith("mul(") -> Mult(groupValues[0].toLong(), groupValues[1].toLong())
-    else -> error("illegal match result $value")
+    value.startsWith("mul(") -> Mult(groupValues[1].toLong(), groupValues[2].toLong())
+    else -> null
   }
 
 data class State(val isEnabled: Boolean = true, val sum: Long = 0L) {
