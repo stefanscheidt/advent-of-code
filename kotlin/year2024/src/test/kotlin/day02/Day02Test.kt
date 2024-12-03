@@ -29,13 +29,14 @@ class Day02Test {
   @Test
   fun `damped reports`() {
     val report: Report = listOf(7, 6, 4, 2, 1)
-    report.dampedReports() shouldBe listOf(
-      listOf(6, 4, 2, 1),
-      listOf(7, 4, 2, 1),
-      listOf(7, 6, 2, 1),
-      listOf(7, 6, 4, 1),
-      listOf(7, 6, 4, 2)
-    )
+    report.dampedReports() shouldBe
+      listOf(
+        listOf(6, 4, 2, 1),
+        listOf(7, 4, 2, 1),
+        listOf(7, 6, 2, 1),
+        listOf(7, 6, 4, 1),
+        listOf(7, 6, 4, 2),
+      )
   }
 
   @Test
