@@ -6,3 +6,5 @@ fun String.rows(): List<String> {
     lines.map { line -> line.getOrNull(column) ?: " " }.joinToString(separator = "")
   }
 }
+
+fun String.notEmptyLines(): List<String> = lines().filterNot { it.isBlank() }
