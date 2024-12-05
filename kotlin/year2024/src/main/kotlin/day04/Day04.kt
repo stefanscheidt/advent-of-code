@@ -43,12 +43,9 @@ fun part2(input: List<String>): String =
     .count { it }
     .toString()
 
-fun <T> List<String>.traverse(fn: (Point2D, Char) -> T): List<T> =
-  flatMapIndexed { y, row ->
-    row.mapIndexed { x, char ->
-      fn(p2(x, y), char)
-    }
-  }
+fun <T> List<String>.traverse(fn: (Point2D, Char) -> T): List<T> = flatMapIndexed { y, row ->
+  row.mapIndexed { x, char -> fn(p2(x, y), char) }
+}
 
 fun List<String>.getAtOrNull(pos: Point2D): Char? = getOrNull(pos.y)?.getOrNull(pos.x)
 
@@ -59,16 +56,12 @@ tailrec fun List<String>.containsWordAt(word: String, pos: Point2D, direction: P
     else -> containsWordAt(word.drop(1), pos + direction, direction)
   }
 
-val directions = listOf(
-  p2(-1, -1), p2(-1, 0), p2(-1, 1), p2(0, -1), p2(0, 1), p2(1, -1), p2(1, 0), p2(1, 1),
-)
+val directions =
+  listOf(p2(-1, -1), p2(-1, 0), p2(-1, 1), p2(0, -1), p2(0, 1), p2(1, -1), p2(1, 0), p2(1, 1))
 
 data object X {
   // counter-clockwise, order matters
-  val tips = listOf(
-    p2(-1, -1), p2(-1, 1), p2(1, 1), p2(1, -1),
-  )
+  val tips = listOf(p2(-1, -1), p2(-1, 1), p2(1, 1), p2(1, -1))
   // possible tip chars when visiting tips counter-clockwise
   val tipChars = listOf("MMSS", "MSSM", "SSMM", "SMMS")
 }
-

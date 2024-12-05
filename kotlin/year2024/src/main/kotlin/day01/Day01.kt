@@ -40,4 +40,3 @@ private fun inputLists(input: String): Pair<List<Long>, List<Long>> =
       Pair(fst.toLong(), snd.toLong())
     }
     .unzip()
-

@@ -36,5 +36,4 @@ class Day04Test {
     solution.first shouldBe "2500"
     solution.second shouldBe "1933"
   }
-
 }
