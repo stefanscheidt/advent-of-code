@@ -45,14 +45,13 @@ class Day05Test {
 
   @Test
   fun `solve part two with sample input`() {
-    TODO()
+    part2(sample) shouldBe "123"
   }
 
   @Test
   fun `solve puzzle`() {
     val solution = solvePuzzle(file)
     solution.first shouldBe "4609"
-    solution.second shouldBe ""
+    solution.second shouldBe "5723"
   }
-
 }

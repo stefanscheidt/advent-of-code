@@ -22,33 +22,54 @@ fun part1(input: String): String {
 
   val correctUpdates = allUpdates.filter { update -> update.isInOrder(rules) }
 
-  return correctUpdates.sumOf { update -> update[update.size / 2] }.toString()
+  return correctUpdates.sumOf(Update::middlePage).toString()
 }
 
 fun part2(input: String): String {
-  return "TODO2"
+  val (rules, allUpdates) = parseInput(input)
+
+  val incorrectUpdatesSorted =
+    allUpdates
+      .filter { update -> !update.isInOrder(rules) }
+      .map {
+        it.sortedWith { page1, page2 ->
+          when {
+            page1.mustBePrintedBefore(page2, rules) -> -1
+            page2.mustBePrintedBefore(page1, rules) -> 1
+            else -> 0
+          }
+        }
+      }
+
+  return incorrectUpdatesSorted.sumOf(List<Int>::middlePage).toString()
 }
 
 typealias Rules = Map<Int, List<Int>>
 
+fun Int.mustBePrintedBefore(after: Int, rules: Rules): Boolean =
+  after in (rules[this] ?: emptyList())
+
 typealias Update = List<Int>
 
 fun Update.isInOrder(rules: Rules): Boolean =
-  mapIndexed { index, page ->
-    subList(index + 1, size).all { it in (rules[page] ?: emptyList()) }
-  }.all { it }
+  mapIndexed { index, fst ->
+      subList(index + 1, size).all { snd -> fst.mustBePrintedBefore(snd, rules) }
+    }
+    .all { it }
+
+val Update.middlePage: Int
+  get() = this[size / 2]
 
 fun parseInput(input: String): Pair<Rules, List<Update>> {
   val (rulesInput, updatesInput) = input.split("\n\n")
 
-  val rules = rulesInput.notEmptyLines()
-    .map { line -> line.split("|") }
-    .groupBy(
-      keySelector = { it[0].toInt() },
-      valueTransform = { it[1].toInt() },
-    )
-  val updates = updatesInput.notEmptyLines()
-    .map { line -> line.split(",").map { it.toInt() } }
+  val rules =
+    rulesInput
+      .notEmptyLines()
+      .map { line -> line.split("|") }
+      .groupBy(keySelector = { it[0].toInt() }, valueTransform = { it[1].toInt() })
+
+  val updates = updatesInput.notEmptyLines().map { line -> line.split(",").map { it.toInt() } }
 
   return Pair(rules, updates)
 }
