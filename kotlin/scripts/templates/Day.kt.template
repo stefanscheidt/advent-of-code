@@ -1,24 +1,12 @@
 package day%%DAY%%
 
-import common.io.inputFile
-import java.io.File
-
-val file = inputFile("day%%DAY%%.txt")
-
-fun main() {
-  val (part1, part2) = solvePuzzle(file)
-  println("1: $part1")
-  println("2: $part2")
-}
-
-fun solvePuzzle(file: File): Pair<String, String> {
-  val input = file.readLines()
-  return Pair(part1(input), part2(input))
-}
+// Part 1
 
 fun part1(input: List<String>): String {
   return "TODO1"
 }
+
+// Part 2
 
 fun part2(input: List<String>): String {
   return "TODO2"
