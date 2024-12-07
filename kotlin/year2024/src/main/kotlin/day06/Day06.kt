@@ -60,24 +60,26 @@ data class Guard(val pos: Point2D, val direction: Direction) {
 val Set<Guard>.positions: Set<Point2D>
   get() = map(Guard::pos).toSet()
 
-fun Map.findGuard(): Guard {
+fun Map.findGuard(): Guard? {
   forEachIndexed { y, row ->
     row.forEachIndexed { x, symbol ->
       val direction = symbol.toDirection()
       if (direction != null) return Guard(p2(x, y), direction)
     }
   }
-  error("Guard not found")
+  return null
 }
 
 // Traverse
 
 data class Trace(val positions: Set<Point2D>, val isLoop: Boolean)
 
-fun Map.traverse(guard: Guard = findGuard()): Trace {
+fun emptyTrace(): Trace = Trace(emptySet(), false)
+
+fun Map.traverse(guard: Guard? = findGuard()): Trace {
   val seen = mutableSetOf<Guard>()
 
-  var current = guard
+  var current = guard ?: findGuard() ?: return emptyTrace()
   while (current !in seen && this[current.pos] != null) {
     seen += current
     current = current.move(map = this)
@@ -104,11 +106,8 @@ fun <T> Map.withObstacleAt(pos: Point2D, fn: (Map) -> T): T {
 fun part2(input: List<String>): String {
   val map = input.map { it.toCharArray() }
   val guard = map.findGuard()
-  val candidates = map
-    .traverse(guard)
-    .positions
-    .filterNot { it == guard.pos }
+  val candidates = map.traverse(guard).positions.filterNot { it == guard?.pos }
   return candidates
-    .count { pos -> map.withObstacleAt(pos) { it.traverse(guard).isLoop } }
+    .count { candidate -> map.withObstacleAt(candidate) { it.traverse(guard).isLoop } }
     .toString()
 }
