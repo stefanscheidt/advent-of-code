@@ -7,6 +7,6 @@ fun String.rows(): List<String> {
   }
 }
 
-fun String.notBlankLines(): List<String> = lines().filterNot { it.isBlank() }
+fun String.nonBlankLines(): List<String> = lines().filterNot { it.isBlank() }
 
-fun List<String>.notBlankLines(): List<String> = filterNot { it.isBlank() }
+fun List<String>.nonBlankLines(): List<String> = filterNot { it.isBlank() }

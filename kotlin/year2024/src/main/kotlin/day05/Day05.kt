@@ -1,7 +1,7 @@
 package day05
 
 import common.io.inputFile
-import common.strings.notBlankLines
+import common.strings.nonBlankLines
 import java.io.File
 
 val file = inputFile("day05.txt")
@@ -65,11 +65,11 @@ fun parseInput(input: String): Pair<Rules, List<Update>> {
 
   val rules =
     rulesInput
-      .notBlankLines()
+      .nonBlankLines()
       .map { line -> line.split("|") }
       .groupBy(keySelector = { it[0].toInt() }, valueTransform = { it[1].toInt() })
 
-  val updates = updatesInput.notBlankLines().map { line -> line.split(",").map { it.toInt() } }
+  val updates = updatesInput.nonBlankLines().map { line -> line.split(",").map { it.toInt() } }
 
   return Pair(rules, updates)
 }
