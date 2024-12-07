@@ -1,5 +1,7 @@
 package day03
 
+import common.io.inputFile
+import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -29,8 +31,10 @@ class Day03Test {
 
   @Test
   fun `solve puzzle`() {
-    val solution = solvePuzzle(file)
-    solution.first shouldBe "155955228"
-    solution.second shouldBe "100189366"
+    val input = inputFile("day03.txt").readText()
+    assertSoftly {
+      part1(input) shouldBe "155955228"
+      part2(input) shouldBe "100189366"
+    }
   }
 }
