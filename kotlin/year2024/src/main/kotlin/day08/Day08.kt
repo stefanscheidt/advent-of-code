@@ -22,7 +22,6 @@ val Grid.antennas: Map<String, List<Point2D>>
       antennaRegex.findAll(row).map { match -> match.value to p2(match.range.first, y) }
     }.groupBy(keySelector = { it.first }, valueTransform = { it.second })
 
-
 fun Grid.antinodes(generator: (Pair<Point2D, Point2D>) -> List<Point2D>): List<Point2D> =
   antennas
     .flatMap { (_, positions) -> allPairs(positions).flatMap(generator) }
@@ -34,16 +33,17 @@ fun Grid.antinodes(generator: (Pair<Point2D, Point2D>) -> List<Point2D>): List<P
 fun part1(input: List<String>): String =
   input.antinodes { (fst, snd) ->
     listOf(snd + (snd - fst), fst + (fst - snd))
-  }.size.toString()
+  }.also(::println)
+    .size.toString()
 
 // Part 2
 
 fun part2(input: List<String>): String =
   input.antinodes { (fst, snd) ->
-    val an1 = generateSequence(snd) { it + (snd - fst) }
+    val an1 = generateSequence(fst) { it + (fst - snd) }
       .takeWhile { input.contains(it) }
       .toList()
-    val an2 = generateSequence(fst) { it + (fst - snd) }
+    val an2 = generateSequence(snd) { it + (snd - fst) }
       .takeWhile { input.contains(it) }
       .toList()
     an1 + an2
