@@ -25,10 +25,7 @@ val Grid.antennas: Map<String, List<Point2D>>
 
 fun Grid.antinodes(generator: (Pair<Point2D, Point2D>) -> List<Point2D>): List<Point2D> =
   antennas
-    .flatMap { (_, positions) ->
-      allPairs(positions)
-        .flatMap(generator)
-    }
+    .flatMap { (_, positions) -> allPairs(positions).flatMap(generator) }
     .toSet()
     .filter { contains(it) }
 
