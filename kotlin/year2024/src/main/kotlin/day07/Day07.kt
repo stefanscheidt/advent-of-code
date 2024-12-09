@@ -11,6 +11,7 @@ enum class Operation {
 }
 
 class OperationCombinator {
+
   private val cache = mutableMapOf<Int, List<List<Operation>>>()
 
   tailrec fun anyCombinationOf(
@@ -26,7 +27,6 @@ class OperationCombinator {
     } else {
       anyCombinationOf(ops, n, acc.flatMap { comb -> ops.map { comb + it } })
     }
-
 }
 
 tailrec fun anyCombinationOf(
