@@ -40,15 +40,14 @@ fun part1(input: List<String>): String {
 // Part 2
 
 fun part2(input: List<String>): String {
-  val antennas = input.antennas
-  val antinodes = antennas
+  val antinodes = input.antennas
     .flatMap { (_, positions) ->
       allPairs(positions)
         .flatMap { (fst, snd) ->
-          val an1 = generateSequence(snd + (snd - fst)) { it + (snd - fst) }
+          val an1 = generateSequence(snd) { it + (snd - fst) }
             .takeWhile { input.contains(it) }
             .toList()
-          val an2 = generateSequence(fst + (fst - snd)) { it + (fst - snd) }
+          val an2 = generateSequence(fst) { it + (fst - snd) }
             .takeWhile { input.contains(it) }
             .toList()
           an1 + an2

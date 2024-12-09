@@ -46,13 +46,13 @@ class Day08Test {
   }
 
   @Test
-  fun `solve part two with sample input`() {
-    part2(sample.lines()) shouldBe "34"
+  fun `solve part two with simple sample input`() {
+    part2(simpleSample.lines()) shouldBe "9"
   }
 
   @Test
-  fun `solve part two with simple sample input`() {
-    part2(simpleSample.lines()) shouldBe "9"
+  fun `solve part two with complex sample input`() {
+    part2(sample.lines()) shouldBe "34"
   }
 
   @Test
