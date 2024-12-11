@@ -36,7 +36,7 @@ class Day10Test {
     val input = inputFile("day10.txt").readNonBlankLines()
     assertSoftly {
       part1(input) shouldBe "822"
-      part2(input) shouldBe "ANSWER2"
+      part2(input) shouldBe "1801"
     }
   }
 }

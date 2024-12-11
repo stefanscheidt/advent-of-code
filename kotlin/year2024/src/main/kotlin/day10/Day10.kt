@@ -25,7 +25,7 @@ val Point2D.cardinalNeighbors: List<Point2D>
 
 // Count Paths
 
-fun TopoMap.countPaths(start: Point2D): Int {
+fun TopoMap.countReachablePeeks(start: Point2D): Int {
   val queue = mutableListOf(start)
   val seen = mutableSetOf<Point2D>()
   var count = 0
@@ -49,6 +49,27 @@ fun TopoMap.countPaths(start: Point2D): Int {
   return count
 }
 
+fun TopoMap.countPaths(start: Point2D): Int {
+  val queue = mutableListOf(start)
+  var count = 0
+
+  while (queue.isNotEmpty()) {
+    val position = queue.removeFirst()
+    if (this[position] == 9) {
+      count++
+    } else {
+      queue.addAll(
+        position.cardinalNeighbors.filter { neighbour ->
+          neighbour in this && this[neighbour] == this[position] + 1
+        },
+      )
+    }
+  }
+
+  return count
+}
+
+
 val TopoMap.trailheads: List<Point2D>
   get() = flatMapIndexed { y, row ->
     row.mapIndexedNotNull { x, hight ->
@@ -57,17 +78,20 @@ val TopoMap.trailheads: List<Point2D>
   }
 
 fun TopoMap.scoreTrails(): Int {
+  return trailheads.sumOf { trailhead -> countReachablePeeks(trailhead) }
+}
+
+fun TopoMap.rateTrails(): Int {
   return trailheads.sumOf { trailhead -> countPaths(trailhead) }
 }
 
+
 // Part 1
 
-fun part1(input: List<String>): String {
-  return topoMapOf(input).scoreTrails().toString()
-}
+fun part1(input: List<String>): String =
+  topoMapOf(input).scoreTrails().toString()
 
 // Part 2
 
-fun part2(input: List<String>): String {
-  return "TODO2"
-}
+fun part2(input: List<String>): String =
+  topoMapOf(input).rateTrails().toString()
