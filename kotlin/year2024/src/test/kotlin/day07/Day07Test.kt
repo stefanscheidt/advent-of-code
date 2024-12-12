@@ -27,16 +27,17 @@ class Day07Test {
 
   @Test
   fun `any combination of ops`() {
-    anyCombinationOf(listOf(ADD, MULT), 3) shouldContainExactlyInAnyOrder listOf(
-      listOf(ADD, ADD, ADD),
-      listOf(ADD, ADD, MULT),
-      listOf(ADD, MULT, ADD),
-      listOf(ADD, MULT, MULT),
-      listOf(MULT, ADD, ADD),
-      listOf(MULT, ADD, MULT),
-      listOf(MULT, MULT, ADD),
-      listOf(MULT, MULT, MULT),
-    )
+    anyCombinationOf(listOf(ADD, MULT), 3) shouldContainExactlyInAnyOrder
+      listOf(
+        listOf(ADD, ADD, ADD),
+        listOf(ADD, ADD, MULT),
+        listOf(ADD, MULT, ADD),
+        listOf(ADD, MULT, MULT),
+        listOf(MULT, ADD, ADD),
+        listOf(MULT, ADD, MULT),
+        listOf(MULT, MULT, ADD),
+        listOf(MULT, MULT, MULT),
+      )
   }
 
   @Test
@@ -57,5 +58,4 @@ class Day07Test {
       part2(input) shouldBe "106016735664498"
     }
   }
-
 }

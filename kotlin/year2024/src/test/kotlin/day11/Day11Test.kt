@@ -2,8 +2,8 @@ package day11
 
 import common.io.inputFile
 import common.io.readNonBlankLines
-import io.kotest.matchers.shouldBe
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class Day11Test {
@@ -32,5 +32,4 @@ class Day11Test {
       part2(input) shouldBe "242090118578155"
     }
   }
-
 }

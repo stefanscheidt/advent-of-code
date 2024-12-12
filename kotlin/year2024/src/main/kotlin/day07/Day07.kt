@@ -7,7 +7,9 @@ import day07.Operation.MULT
 // Operations
 
 enum class Operation {
-  ADD, MULT, CONCAT
+  ADD,
+  MULT,
+  CONCAT,
 }
 
 class OperationCombinator {
@@ -17,7 +19,7 @@ class OperationCombinator {
   tailrec fun anyCombinationOf(
     ops: List<Operation>,
     n: Int,
-    acc: List<List<Operation>> = listOf(emptyList())
+    acc: List<List<Operation>> = listOf(emptyList()),
   ): List<List<Operation>> =
     if (cache[n] != null) {
       cache.getValue(n)
@@ -32,12 +34,10 @@ class OperationCombinator {
 tailrec fun anyCombinationOf(
   ops: List<Operation>,
   n: Int,
-  acc: List<List<Operation>> = listOf(emptyList())
+  acc: List<List<Operation>> = listOf(emptyList()),
 ): List<List<Operation>> =
-  if (acc[0].size == n)
-    acc
-  else
-    anyCombinationOf(ops, n, acc.flatMap { comb -> ops.map { comb + it } })
+  if (acc[0].size == n) acc
+  else anyCombinationOf(ops, n, acc.flatMap { comb -> ops.map { comb + it } })
 
 // Equations
 
@@ -48,26 +48,25 @@ fun String.intoEquation(): Equation {
   return Equation(test.toLong(), operands.split(" ").map { it.toLong() })
 }
 
-
 fun List<Equation>.filterTrue(vararg operations: Operation): List<Equation> {
   val combinator = OperationCombinator()
   return filter { (value, operands) ->
     combinator.anyCombinationOf(operations.toList(), operands.size - 1).any { ops ->
       val opsIter = ops.iterator()
-      val result = operands.drop(1).fold(operands.first()) { acc, operand ->
-        when (opsIter.next()) {
-          ADD -> acc + operand
-          MULT -> acc * operand
-          CONCAT -> "$acc$operand".toLong()
+      val result =
+        operands.drop(1).fold(operands.first()) { acc, operand ->
+          when (opsIter.next()) {
+            ADD -> acc + operand
+            MULT -> acc * operand
+            CONCAT -> "$acc$operand".toLong()
+          }
         }
-      }
       result == value
     }
   }
 }
 
-fun List<Equation>.sum(): Long =
-  sumOf(Equation::value)
+fun List<Equation>.sum(): Long = sumOf(Equation::value)
 
 // Part 1
 

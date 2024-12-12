@@ -8,7 +8,6 @@ import day06.Direction.NORTH
 import day06.Direction.SOUTH
 import day06.Direction.WEST
 
-
 // Direction
 
 enum class Direction(val vec: Point2D) {
@@ -39,8 +38,7 @@ fun Char.toDirection(): Direction? =
 
 typealias Map = List<CharArray>
 
-operator fun Map.get(pos: Point2D): Char? =
-  getOrNull(pos.y)?.getOrNull(pos.x)
+operator fun Map.get(pos: Point2D): Char? = getOrNull(pos.y)?.getOrNull(pos.x)
 
 operator fun Map.set(pos: Point2D, value: Char) {
   this[pos.y][pos.x] = value
@@ -54,7 +52,6 @@ data class Guard(val pos: Point2D, val direction: Direction) {
     val nextPos = pos + direction.vec
     return if (map[nextPos] == '#') copy(direction = direction.turnRight()) else copy(pos = nextPos)
   }
-
 }
 
 val Set<Guard>.positions: Set<Point2D>

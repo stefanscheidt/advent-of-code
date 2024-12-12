@@ -23,9 +23,10 @@ fun part2(input: String): String {
 
 data class State(val isEnabled: Boolean, val sum: Long) {
   fun enabled(): State = copy(isEnabled = true)
-  fun disabled(): State = copy(isEnabled = false)
-  fun updated(value: Long): State = if (isEnabled) copy(sum = sum + value) else this
 
+  fun disabled(): State = copy(isEnabled = false)
+
+  fun updated(value: Long): State = if (isEnabled) copy(sum = sum + value) else this
 }
 
 sealed interface Operation {

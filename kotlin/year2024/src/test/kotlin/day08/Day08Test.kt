@@ -2,8 +2,8 @@ package day08
 
 import common.io.inputFile
 import common.io.readNonBlankLines
-import io.kotest.matchers.shouldBe
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class Day08Test {
@@ -63,5 +63,4 @@ class Day08Test {
       part2(input) shouldBe "1339"
     }
   }
-
 }

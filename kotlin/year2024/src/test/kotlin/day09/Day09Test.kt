@@ -31,5 +31,4 @@ class Day09Test {
       part2(input) shouldBe "ANSWER2"
     }
   }
-
 }

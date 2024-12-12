@@ -11,5 +11,4 @@ fun inputFile(filename: String): File {
   return File(pathname)
 }
 
-fun File.readNonBlankLines(): List<String> =
-  readLines().nonBlankLines()
+fun File.readNonBlankLines(): List<String> = readLines().nonBlankLines()

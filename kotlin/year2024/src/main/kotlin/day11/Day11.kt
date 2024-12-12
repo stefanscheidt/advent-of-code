@@ -20,25 +20,23 @@ class Game(private val stones: List<Stone>) {
     } else if (countAfterBlinks in cache) {
       cache.getValue(countAfterBlinks)
     } else {
-      val result = when {
-        stone == 0L -> count(1, blinks - 1)
-        stone.numberOfDigits % 2 == 0 -> {
-          val (left, right) = stone.splitInHalf()
-          count(left, blinks - 1) + count(right, blinks - 1)
-        }
+      val result =
+        when {
+          stone == 0L -> count(1, blinks - 1)
+          stone.numberOfDigits % 2 == 0 -> {
+            val (left, right) = stone.splitInHalf()
+            count(left, blinks - 1) + count(right, blinks - 1)
+          }
 
-        else -> count(stone * 2024, blinks - 1)
-      }
+          else -> count(stone * 2024, blinks - 1)
+        }
       cache[countAfterBlinks] = result
       result
     }
-
   }
-
 }
 
-fun gameOf(stones: List<Stone>): Game =
-  Game(stones)
+fun gameOf(stones: List<Stone>): Game = Game(stones)
 
 // Part 1
 

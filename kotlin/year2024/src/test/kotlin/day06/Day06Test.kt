@@ -42,5 +42,4 @@ class Day06Test {
       part2(input) shouldBe "2262"
     }
   }
-
 }
