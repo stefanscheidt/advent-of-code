@@ -3,7 +3,6 @@ package day%%DAY%%
 import common.io.inputFile
 import common.io.readNonBlankLines
 import io.kotest.matchers.shouldBe
-import io.kotest.assertions.assertSoftly
 import org.junit.jupiter.api.Test
 
 class Day%%DAY%%Test {
@@ -24,12 +23,15 @@ class Day%%DAY%%Test {
   }
 
   @Test
-  fun `solve puzzle`() {
+  fun `solve part one`() {
     val input = inputFile("day%%DAY%%.txt").readNonBlankLines()
-    assertSoftly {
-      part1(input) shouldBe "ANSWER1"
-      part2(input) shouldBe "ANSWER2"
-    }
+    part1(input) shouldBe "ANSWER1"
+  }
+
+  @Test
+  fun `solve part two`() {
+    val input = inputFile("day%%DAY%%.txt").readNonBlankLines()
+    part2(input) shouldBe "ANSWER2"
   }
 
 }
