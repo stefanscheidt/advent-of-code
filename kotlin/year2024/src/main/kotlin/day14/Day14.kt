@@ -4,6 +4,9 @@ import common.geom.Point2D
 import common.geom.p2
 import common.geom.plus
 import common.geom.times
+import common.io.inputFile
+import common.io.readNonBlankLines
+import java.io.File
 
 // Robot
 
@@ -40,7 +43,7 @@ fun part1(input: List<String>, width: Int = 101, hight: Int = 103): String {
     .map { (xs, ys) ->
       robots.count { robot -> robot.position.x in xs && robot.position.y in ys }
     }
-    .fold(1) { acc, count -> acc * count }
+    .reduce(Int::times)
 
   return safetyFactor.toString()
 }
@@ -51,3 +54,24 @@ fun part2(input: List<String>): String {
   return "TODO"
 }
 
+fun main() {
+  val input = inputFile("day14.txt").readNonBlankLines()
+  var robots = input.map(String::toRobot)
+  File("robots.txt").printWriter().use { out ->
+    repeat(10000) { seconds ->
+      robots = robots.map(Robot::move)
+      val positions = robots.map(Robot::position)
+      out.println("=== ${seconds + 1} ===")
+      (0 ..< 101).forEach { x ->
+        (0 ..< 103).forEach { y ->
+          if (p2(x, y) in positions) {
+            out.print("#")
+          } else {
+            out.print(".")
+          }
+        }
+        out.println()
+      }
+    }
+  }
+}

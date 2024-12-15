@@ -51,7 +51,7 @@ class Day14Test {
   @Test
   fun `solve part two`() {
     val input = inputFile("day14.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "7093"
   }
 
 }
