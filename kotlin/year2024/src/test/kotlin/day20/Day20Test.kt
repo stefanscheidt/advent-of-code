@@ -1,6 +1,5 @@
 package day20
 
-import common.geom.Point2D
 import common.io.inputFile
 import common.io.readNonBlankLines
 import io.kotest.matchers.shouldBe
@@ -33,14 +32,14 @@ class Day20Test {
     val racetrack = sample.lines().toRacetrack()
     val start = racetrack.findChar('S') ?: error("Start not found")
     val end = racetrack.findChar('E') ?: error("End not found")
-    racetrack.shortestPathLength(start, end) shouldBe 84
+    racetrack.shortestPath(start, end)?.size shouldBe 84 + 1
   }
 
   @Test
   fun `solve part one with sample input`() {
     val racetrack = sample.lines().toRacetrack()
 
-    savingsToString(racetrack.savings()) shouldBe """
+    savingsToString(racetrack.savings(2)) shouldBe """
       There are 14 cheats that save 2 picoseconds.
       There are 14 cheats that save 4 picoseconds.
       There are 2 cheats that save 6 picoseconds.
@@ -58,8 +57,9 @@ class Day20Test {
   @Test
   fun `solve part two with sample input`() {
     val racetrack = sample.lines().toRacetrack()
+    val savings = racetrack.savings(20).filterKeys { it >= 50 }
 
-    savingsToString(racetrack.savings()) shouldBe """
+    savingsToString(savings) shouldBe """
       There are 32 cheats that save 50 picoseconds.
       There are 31 cheats that save 52 picoseconds.
       There are 29 cheats that save 54 picoseconds.
@@ -86,16 +86,16 @@ class Day20Test {
   @Test
   fun `solve part two`() {
     val input = inputFile("day20.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "1027164"
   }
 
 }
 
-private fun savingToString(saving: Int, cheats: List<Point2D>): String =
+private fun savingToString(saving: Int, cheats: List<Cheat>): String =
   if (cheats.size == 1) "There is one cheat that saves $saving picoseconds."
   else "There are ${cheats.size} cheats that save $saving picoseconds."
 
-private fun savingsToString(savings: Map<Int, List<Point2D>>): String = savings
+private fun savingsToString(savings: Map<Int, List<Cheat>>): String = savings
   .toSortedMap()
   .map { (saving, cheats) -> savingToString(saving, cheats) }
   .joinToString(System.lineSeparator())
