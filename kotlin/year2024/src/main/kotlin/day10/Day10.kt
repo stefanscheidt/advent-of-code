@@ -10,15 +10,14 @@ typealias TopoMap = List<List<Int>>
 fun topoMapOf(lines: List<String>): List<List<Int>> =
   lines.map { line -> line.map { digit -> digit.digitToInt() } }
 
-operator fun TopoMap.contains(p: Point2D): Boolean {
-  return p.y in indices && p.x in this[p.y].indices
-}
+operator fun TopoMap.contains(p: Point2D): Boolean =
+  p.y in indices && p.x in this[p.y].indices
 
-operator fun TopoMap.get(p: Point2D): Int {
-  return this[p.y][p.x]
-}
+operator fun TopoMap.get(p: Point2D): Int =
+  this[p.y][p.x]
 
-val cardinalDirections = listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
+val cardinalDirections: List<Point2D> =
+  listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
 
 val Point2D.cardinalNeighbors: List<Point2D>
   get() = cardinalDirections.map { this + it }
