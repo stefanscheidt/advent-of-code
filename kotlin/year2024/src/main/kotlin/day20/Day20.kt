@@ -9,7 +9,7 @@ import common.geom.plus
 val cardinalDirections: List<Point2D> =
   listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
 
-// Maze
+// Racetrack
 
 typealias Racetrack = List<CharArray>
 
