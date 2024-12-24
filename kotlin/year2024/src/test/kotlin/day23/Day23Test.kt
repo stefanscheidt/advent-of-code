@@ -46,7 +46,7 @@ class Day23Test {
 
   @Test
   fun `compute triples`() {
-    val connections = sample.lines().toConnections()
+    val connections = sample.lines().toConnectionsSet()
     val expectedTriples = """
       aq,cg,yn
       aq,vc,wq
@@ -84,7 +84,7 @@ class Day23Test {
   @Test
   fun `solve part two`() {
     val input = inputFile("day23.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "bz,cs,fx,ms,oz,po,sy,uh,uv,vw,xu,zj,zm"
   }
 
 }

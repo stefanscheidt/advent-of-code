@@ -4,7 +4,7 @@ package day23
 
 typealias Connection = Set<String>
 
-fun List<String>.toConnections(): Set<Connection> =
+fun List<String>.toConnectionsSet(): Set<Connection> =
   map { it.split("-").toSet() }.toSet()
 
 fun Set<Connection>.triples(): Set<Set<String>> =
@@ -20,13 +20,44 @@ fun Set<Connection>.triples(): Set<Set<String>> =
 
 fun part1(input: List<String>): String =
   input
-    .toConnections()
+    .toConnectionsSet()
     .triples()
     .count { t -> t.any { c -> c.startsWith("t") } }
     .toString()
 
 // Part 2
 
+typealias Connections = Map<String, Set<String>>
+
+fun List<String>.toConnectionsMap(): Connections =
+  map { it.split("-") }
+    .flatMap { (a, b) -> listOf(a to b, b to a) }
+    .groupBy({ it.first }, { it.second })
+    .mapValues { it.value.toSet() }
+
+// https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
+fun Connections.largestClique(
+  p: Set<String>,
+  r: Set<String> = emptySet(),
+  x: Set<String> = emptySet()
+): Set<String> =
+  if (p.isEmpty() && x.isEmpty()) {
+    r
+  } else {
+    val nodeWithLargestNeighborhood = (p + x).maxBy { node -> getValue(node).size }
+    val largestNeighborhood = getValue(nodeWithLargestNeighborhood)
+    p.minus(largestNeighborhood)
+      .map { node ->
+        largestClique(
+          p.intersect(getValue(node)),
+          r + node,
+          x.intersect(getValue(node)),
+        )
+      }
+      .maxBy { it.size }
+  }
+
 fun part2(input: List<String>): String {
-  return "TODO2"
+  val connections = input.toConnectionsMap()
+  return connections.largestClique(connections.keys).sorted().joinToString(",")
 }
