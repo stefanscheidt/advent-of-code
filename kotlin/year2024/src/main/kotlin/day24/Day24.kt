@@ -1,5 +1,6 @@
 package day24
 
+import common.io.inputFile
 import day24.Operation.AND
 import day24.Operation.OR
 import day24.Operation.XOR
@@ -71,4 +72,47 @@ fun part1(input: String): String {
 
 fun part2(input: String): String {
   return "TODO2"
+}
+
+fun main() {
+  val input = inputFile("day24.txt").readText().trimEnd()
+  val (_, gates) = parseInput(input)
+  val z = gates.map { it.key }.filter { it.startsWith("z") }.sorted().joinToString("->")
+  val x = z.replace("z", "x")
+  val y = z.replace("z", "y")
+
+  println(
+    """
+        digraph G {
+            subgraph {
+               node [style=filled,color=green]
+                $z
+            }
+            subgraph {
+                node [style=filled,color=gray]
+                $x
+            }
+            subgraph {
+                node [style=filled,color=gray]
+                $y
+            }
+            subgraph {
+                node [style=filled,color=pink]
+                ${gates.filter { (_, gate) -> gate.operation == AND }.keys.joinToString(" ")}
+            }
+            subgraph {
+                node [style=filled,color=yellow];
+                ${gates.filter { (_, gate) -> gate.operation == OR }.keys.joinToString(" ")}
+            }
+            subgraph {
+                node [style=filled,color=lightblue];
+                ${gates.filter { (_, gate) -> gate.operation == XOR }.keys.joinToString(" ")}
+            }
+            """.trimIndent()
+  )
+  gates.forEach { (out, gate) ->
+    println("    ${gate.wireA} -> $out")
+    println("    ${gate.wireB} -> $out")
+  }
+  println("}")
 }
