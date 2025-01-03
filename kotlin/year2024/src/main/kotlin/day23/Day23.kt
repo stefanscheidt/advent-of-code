@@ -4,26 +4,22 @@ package day23
 
 typealias Connection = Set<String>
 
-fun List<String>.toConnectionsSet(): Set<Connection> =
-  map { it.split("-").toSet() }.toSet()
+fun List<String>.toConnectionsSet(): Set<Connection> = map { it.split("-").toSet() }.toSet()
 
 fun Set<Connection>.triples(): Set<Set<String>> =
   flatMap { con ->
-    val (a, b) = con.toList()
-    this.asSequence()
-      .filter { connection -> connection.contains(a) }
-      .map { connection -> connection - a }
-      .filter { singleElementSet -> this.contains(singleElementSet + b) }
-      .map { singleElementSet -> singleElementSet + a + b }
-      .toSet()
-  }.toSet()
+      val (a, b) = con.toList()
+      this.asSequence()
+        .filter { connection -> connection.contains(a) }
+        .map { connection -> connection - a }
+        .filter { singleElementSet -> this.contains(singleElementSet + b) }
+        .map { singleElementSet -> singleElementSet + a + b }
+        .toSet()
+    }
+    .toSet()
 
 fun part1(input: List<String>): String =
-  input
-    .toConnectionsSet()
-    .triples()
-    .count { t -> t.any { c -> c.startsWith("t") } }
-    .toString()
+  input.toConnectionsSet().triples().count { t -> t.any { c -> c.startsWith("t") } }.toString()
 
 // Part 2
 
@@ -39,7 +35,7 @@ fun List<String>.toConnectionsMap(): Connections =
 fun Connections.largestClique(
   p: Set<String>,
   r: Set<String> = emptySet(),
-  x: Set<String> = emptySet()
+  x: Set<String> = emptySet(),
 ): Set<String> =
   if (p.isEmpty() && x.isEmpty()) {
     r
@@ -48,11 +44,7 @@ fun Connections.largestClique(
     val largestNeighborhood = getValue(nodeWithLargestNeighborhood)
     p.minus(largestNeighborhood)
       .map { node ->
-        largestClique(
-          p.intersect(getValue(node)),
-          r + node,
-          x.intersect(getValue(node)),
-        )
+        largestClique(p.intersect(getValue(node)), r + node, x.intersect(getValue(node)))
       }
       .maxBy { it.size }
   }

@@ -10,8 +10,7 @@ operator fun Point.plus(other: Point): Point = copy(x = x + other.x, y = y + oth
 
 operator fun Point.minus(other: Point): Point = plus(-other)
 
-operator fun Int.times(point: Point): Point =
-  point.copy(x = this * point.x, y = this * point.y)
+operator fun Int.times(point: Point): Point = point.copy(x = this * point.x, y = this * point.y)
 
 fun p(x: Long, y: Long): Point = Point(x, y)
 
@@ -25,7 +24,6 @@ val prizeRegex = Regex("""Prize: X=(\d+), Y=(\d+)""")
 data class ButtonPresses(val a: Long, val b: Long) {
   fun tokensNeeded(): Long = a * 3 + b
 }
-
 
 // Behavior
 
@@ -44,7 +42,6 @@ data class Behavior(val a: Point, val b: Point, val prize: Point) {
 
     return if (winning) ButtonPresses(pressA, pressB) else null
   }
-
 }
 
 fun String.intoBehavior(): Behavior? {

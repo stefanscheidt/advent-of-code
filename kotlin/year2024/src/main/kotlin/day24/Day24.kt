@@ -10,7 +10,7 @@ import day24.Operation.XOR
 enum class Operation(val fn: (Int, Int) -> Int) {
   AND({ a, b -> a and b }),
   OR({ a, b -> a or b }),
-  XOR({ a, b -> a xor b })
+  XOR({ a, b -> a xor b }),
 }
 
 // Gate
@@ -39,12 +39,13 @@ fun parseInputSignal(input: String): Pair<String, Int> {
 fun parseGate(input: String): Pair<String, Gate> {
   val match = gateRegex.matchEntire(input) ?: error("Can't parse gate [$input]")
   val (a, opCode, b, out) = match.destructured
-  val operation = when (opCode) {
-    "AND" -> AND
-    "OR" -> OR
-    "XOR" -> XOR
-    else -> error("Invalid operation: $opCode")
-  }
+  val operation =
+    when (opCode) {
+      "AND" -> AND
+      "OR" -> OR
+      "XOR" -> XOR
+      else -> error("Invalid operation: $opCode")
+    }
   return out to Gate(operation, a, b)
 }
 
@@ -59,11 +60,12 @@ fun parseInput(input: String): Pair<Map<String, Int>, Map<String, Gate>> {
 
 fun part1(input: String): String {
   val (inputs, gates) = parseInput(input)
-  val zValue = gates.keys
-    .filter { it.startsWith("z") }
-    .sorted()
-    .map { wire -> gates.signalAt(wire, inputs) }
-    .foldIndexed(0L) { index, acc, signal -> acc + signal * (1L shl index) }
+  val zValue =
+    gates.keys
+      .filter { it.startsWith("z") }
+      .sorted()
+      .map { wire -> gates.signalAt(wire, inputs) }
+      .foldIndexed(0L) { index, acc, signal -> acc + signal * (1L shl index) }
 
   return zValue.toString()
 }
@@ -108,7 +110,8 @@ fun main() {
                 node [style=filled,color=lightblue];
                 ${gates.filter { (_, gate) -> gate.operation == XOR }.keys.joinToString(" ")}
             }
-            """.trimIndent()
+            """
+      .trimIndent()
   )
   gates.forEach { (out, gate) ->
     println("    ${gate.wireA} -> $out")

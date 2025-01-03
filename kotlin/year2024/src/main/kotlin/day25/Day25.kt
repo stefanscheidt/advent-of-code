@@ -4,8 +4,7 @@ typealias Schematic = List<String>
 
 typealias Profile = List<Int>
 
-fun Profile.fits(other: Profile): Boolean =
-  this.zip(other).map { (a, b) -> a + b }.all { it <= 5 }
+fun Profile.fits(other: Profile): Boolean = this.zip(other).map { (a, b) -> a + b }.all { it <= 5 }
 
 fun Schematic.toProfile(): Profile {
   val profile = MutableList(5) { 0 }

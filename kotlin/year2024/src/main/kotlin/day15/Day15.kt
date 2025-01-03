@@ -49,13 +49,14 @@ data class Warehouse(val walls: Set<Point2D>, val boxes: MutableSet<Point2D>, va
       !in boxes -> Free(next)
       else -> behindBoxes(position + direction, direction)
     }
-
 }
 
 sealed interface BehindBox {
   val position: Point2D
 }
+
 data class Wall(override val position: Point2D) : BehindBox
+
 data class Free(override val position: Point2D) : BehindBox
 
 fun String.toWarehouse(): Warehouse? {

@@ -98,5 +98,4 @@ class Day24Test {
     val input = inputFile("day24.txt").readText().trimEnd()
     part2(input) shouldBe "ANSWER2"
   }
-
 }

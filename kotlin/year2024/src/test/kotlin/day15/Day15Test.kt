@@ -53,5 +53,4 @@ class Day15Test {
     val input = inputFile("day15.txt").readText().trimEnd()
     part2(input) shouldBe "ANSWER2"
   }
-
 }

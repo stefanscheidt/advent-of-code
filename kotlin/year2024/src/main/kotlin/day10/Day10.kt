@@ -10,11 +10,9 @@ typealias TopoMap = List<List<Int>>
 fun topoMapOf(lines: List<String>): List<List<Int>> =
   lines.map { line -> line.map { digit -> digit.digitToInt() } }
 
-operator fun TopoMap.contains(p: Point2D): Boolean =
-  p.y in indices && p.x in this[p.y].indices
+operator fun TopoMap.contains(p: Point2D): Boolean = p.y in indices && p.x in this[p.y].indices
 
-operator fun TopoMap.get(p: Point2D): Int =
-  this[p.y][p.x]
+operator fun TopoMap.get(p: Point2D): Int = this[p.y][p.x]
 
 val cardinalDirections: List<Point2D> =
   listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
@@ -39,7 +37,7 @@ fun TopoMap.countReachablePeeks(start: Point2D): Int {
         queue.addAll(
           position.cardinalNeighbors.filter { neighbour ->
             neighbour in this && this[neighbour] == this[position] + 1
-          },
+          }
         )
       }
     }
@@ -60,7 +58,7 @@ fun TopoMap.countPaths(start: Point2D): Int {
       queue.addAll(
         position.cardinalNeighbors.filter { neighbour ->
           neighbour in this && this[neighbour] == this[position] + 1
-        },
+        }
       )
     }
   }
@@ -68,12 +66,9 @@ fun TopoMap.countPaths(start: Point2D): Int {
   return count
 }
 
-
 val TopoMap.trailheads: List<Point2D>
   get() = flatMapIndexed { y, row ->
-    row.mapIndexedNotNull { x, hight ->
-      if (hight == 0) Point2D(x, y) else null
-    }
+    row.mapIndexedNotNull { x, hight -> if (hight == 0) Point2D(x, y) else null }
   }
 
 fun TopoMap.scoreTrails(): Int {
@@ -84,13 +79,10 @@ fun TopoMap.rateTrails(): Int {
   return trailheads.sumOf { trailhead -> countPaths(trailhead) }
 }
 
-
 // Part 1
 
-fun part1(input: List<String>): String =
-  topoMapOf(input).scoreTrails().toString()
+fun part1(input: List<String>): String = topoMapOf(input).scoreTrails().toString()
 
 // Part 2
 
-fun part2(input: List<String>): String =
-  topoMapOf(input).rateTrails().toString()
+fun part2(input: List<String>): String = topoMapOf(input).rateTrails().toString()

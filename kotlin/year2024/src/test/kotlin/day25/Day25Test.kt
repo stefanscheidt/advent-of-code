@@ -60,5 +60,4 @@ class Day25Test {
     val input = inputFile("day25.txt").readText().trimEnd()
     part1(input) shouldBe "2824"
   }
-
 }

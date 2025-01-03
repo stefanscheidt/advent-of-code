@@ -15,29 +15,25 @@ val Point2D.cardinalNeighbors: List<Point2D>
 typealias GardenMap = Map<Point2D, Char>
 
 fun List<String>.intoGardenMap(): GardenMap =
-  flatMapIndexed { y, row ->
-    row.mapIndexed { x, c -> Point2D(x, y) to c }
-  }.toMap()
+  flatMapIndexed { y, row -> row.mapIndexed { x, c -> Point2D(x, y) to c } }.toMap()
 
-fun GardenMap.regions(): Map<Point2D, Int> =
-  buildMap {
-    var regionId = 0
-    for ((point, plant) in this@regions) {
-      if (point in this) continue
+fun GardenMap.regions(): Map<Point2D, Int> = buildMap {
+  var regionId = 0
+  for ((point, plant) in this@regions) {
+    if (point in this) continue
 
-      val queue = mutableListOf(point)
-      while (queue.isNotEmpty()) {
-        val current = queue.removeFirst()
-        if (this@regions[current] == plant) {
-          this[current] = regionId
-          queue.addAll(current.cardinalNeighbors.filter { it !in queue && it !in this })
-        }
+    val queue = mutableListOf(point)
+    while (queue.isNotEmpty()) {
+      val current = queue.removeFirst()
+      if (this@regions[current] == plant) {
+        this[current] = regionId
+        queue.addAll(current.cardinalNeighbors.filter { it !in queue && it !in this })
       }
-
-      regionId++
     }
-  }
 
+    regionId++
+  }
+}
 
 // Part 1
 
@@ -48,14 +44,13 @@ fun part1(input: List<String>): String {
   val minId = regions.values.min()
   val maxId = regions.values.max()
 
-  val totalPrice = (minId..maxId).sumOf { id ->
-    val points = regions.filter { it.value == id }.keys
-    val area = points.size
-    val perimeter = points.sumOf { p ->
-      4 - p.cardinalNeighbors.count { it in points }
+  val totalPrice =
+    (minId..maxId).sumOf { id ->
+      val points = regions.filter { it.value == id }.keys
+      val area = points.size
+      val perimeter = points.sumOf { p -> 4 - p.cardinalNeighbors.count { it in points } }
+      area * perimeter
     }
-    area * perimeter
-  }
 
   return totalPrice.toString()
 }

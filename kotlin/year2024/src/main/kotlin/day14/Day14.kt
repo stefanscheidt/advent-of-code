@@ -10,10 +10,7 @@ import java.io.File
 
 // Robot
 
-data class Robot(
-  val position: Point2D,
-  val velocity: Point2D
-) {
+data class Robot(val position: Point2D, val velocity: Point2D) {
   fun move(times: Int = 1, width: Int = 101, hight: Int = 103): Robot {
     val p = position + times * velocity
     val x = p.x.mod(width)
@@ -32,18 +29,18 @@ fun String.toRobot(): Robot {
 // Part 1
 
 fun part1(input: List<String>, width: Int = 101, hight: Int = 103): String {
-  val robots = input.map(String::toRobot)
-    .map { it.move(times = 100, width = width, hight = hight) }
+  val robots = input.map(String::toRobot).map { it.move(times = 100, width = width, hight = hight) }
   val topLeft = Pair(0..<width / 2, 0..<hight / 2)
   val topRight = Pair(width / 2 + 1..<width, 0..<hight / 2)
   val bottomLeft = Pair(0..<width / 2, hight / 2 + 1..<hight)
   val bottomRight = Pair(width / 2 + 1..<width, hight / 2 + 1..<hight)
 
-  val safetyFactor = listOf(topLeft, topRight, bottomLeft, bottomRight)
-    .map { (xs, ys) ->
-      robots.count { robot -> robot.position.x in xs && robot.position.y in ys }
-    }
-    .reduce(Int::times)
+  val safetyFactor =
+    listOf(topLeft, topRight, bottomLeft, bottomRight)
+      .map { (xs, ys) ->
+        robots.count { robot -> robot.position.x in xs && robot.position.y in ys }
+      }
+      .reduce(Int::times)
 
   return safetyFactor.toString()
 }
@@ -62,8 +59,8 @@ fun main() {
       robots = robots.map(Robot::move)
       val positions = robots.map(Robot::position)
       out.println("=== ${seconds + 1} ===")
-      (0 ..< 101).forEach { x ->
-        (0 ..< 103).forEach { y ->
+      (0..<101).forEach { x ->
+        (0..<103).forEach { y ->
           if (p2(x, y) in positions) {
             out.print("#")
           } else {

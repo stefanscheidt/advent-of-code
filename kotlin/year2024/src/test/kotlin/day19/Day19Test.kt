@@ -50,5 +50,4 @@ class Day19Test {
     val input = inputFile("day19.txt").readNonBlankLines()
     part2(input) shouldBe "ANSWER2"
   }
-
 }

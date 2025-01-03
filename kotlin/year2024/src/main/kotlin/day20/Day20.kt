@@ -7,8 +7,7 @@ import kotlin.math.abs
 
 // Points
 
-fun dist(p1: Point2D, p2: Point2D): Int =
-  abs(p1.x - p2.x) + abs(p1.y - p2.y)
+fun dist(p1: Point2D, p2: Point2D): Int = abs(p1.x - p2.x) + abs(p1.y - p2.y)
 
 // Directions
 
@@ -23,11 +22,9 @@ data class Cheat(val start: Point2D, val end: Point2D)
 
 typealias Racetrack = List<CharArray>
 
-fun List<String>.toRacetrack(): Racetrack =
-  map { it.toCharArray() }
+fun List<String>.toRacetrack(): Racetrack = map { it.toCharArray() }
 
-operator fun Racetrack.contains(p: Point2D): Boolean =
-  p.y in indices && p.x in this[p.y].indices
+operator fun Racetrack.contains(p: Point2D): Boolean = p.y in indices && p.x in this[p.y].indices
 
 operator fun Racetrack.get(p: Point2D): Char = this[p.y][p.x]
 
@@ -58,8 +55,10 @@ fun Racetrack.shortestPath(start: Point2D, end: Point2D): List<Point2D>? {
       shortestPath = path
     } else {
       seen += position
-      val nextPositions = cardinalDirections.map { position + it }
-        .filter { it in this && this[it] != '#' && it !in seen }
+      val nextPositions =
+        cardinalDirections
+          .map { position + it }
+          .filter { it in this && this[it] != '#' && it !in seen }
       queue.addAll(nextPositions.map { it to path + it })
     }
   }
@@ -73,29 +72,24 @@ fun Racetrack.savings(allowedDistance: Int): Map<Int, List<Cheat>> {
   val shortestPath = shortestPath(start, end) ?: error("No path found")
   val shortestPathLength = shortestPath.size - 1
 
-  val distsFromStart = buildMap {
-    shortestPath.forEachIndexed { index, pos ->
-      this[pos] = index
-    }
-  }
+  val distsFromStart = buildMap { shortestPath.forEachIndexed { index, pos -> this[pos] = index } }
   val distsToEnd = buildMap {
-    shortestPath.reversed().forEachIndexed { index, pos ->
-      this[pos] = index
-    }
+    shortestPath.reversed().forEachIndexed { index, pos -> this[pos] = index }
     this[start] = shortestPathLength
   }
 
-  val cheats = shortestPath
-    .flatMap { s ->
-      shortestPath
-        .filter { e -> dist(s, e) in 2..allowedDistance }
-        .map { e ->
-          val pathLengthWithCheat = distsFromStart[s]!! + dist(s, e) + distsToEnd[e]!!
-          val saving = shortestPathLength - pathLengthWithCheat
-          Cheat(s, e) to saving
-        }
-    }
-    .filter { it.second > 0 }
+  val cheats =
+    shortestPath
+      .flatMap { s ->
+        shortestPath
+          .filter { e -> dist(s, e) in 2..allowedDistance }
+          .map { e ->
+            val pathLengthWithCheat = distsFromStart[s]!! + dist(s, e) + distsToEnd[e]!!
+            val saving = shortestPathLength - pathLengthWithCheat
+            Cheat(s, e) to saving
+          }
+      }
+      .filter { it.second > 0 }
 
   return cheats.groupBy(keySelector = { it.second }, valueTransform = { it.first })
 }
