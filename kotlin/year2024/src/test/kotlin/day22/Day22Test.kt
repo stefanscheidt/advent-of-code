@@ -19,19 +19,20 @@ class Day22Test {
 
   @Test
   fun `compute next secrets`() {
-    nextSecrets(123).take(11).toList() shouldBe listOf(
-      123L,
-      15887950L,
-      16495136L,
-      527345L,
-      704524L,
-      1553684L,
-      12683156L,
-      11100544L,
-      12249484L,
-      7753432L,
-      5908254L,
-    )
+    nextSecrets(123).take(11).toList() shouldBe
+      listOf(
+        123L,
+        15887950L,
+        16495136L,
+        527345L,
+        704524L,
+        1553684L,
+        12683156L,
+        11100544L,
+        12249484L,
+        7753432L,
+        5908254L,
+      )
   }
 
   @Test
@@ -83,5 +84,4 @@ class Day22Test {
     val input = inputFile("day22.txt").readNonBlankLines()
     part2(input) shouldBe "2268"
   }
-
 }

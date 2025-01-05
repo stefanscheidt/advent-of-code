@@ -39,7 +39,8 @@ class Day20Test {
   fun `solve part one with sample input`() {
     val racetrack = sample.lines().toRacetrack()
 
-    savingsToString(racetrack.savings(2)) shouldBe """
+    savingsToString(racetrack.savings(2)) shouldBe
+      """
       There are 14 cheats that save 2 picoseconds.
       There are 14 cheats that save 4 picoseconds.
       There are 2 cheats that save 6 picoseconds.
@@ -51,7 +52,8 @@ class Day20Test {
       There is one cheat that saves 38 picoseconds.
       There is one cheat that saves 40 picoseconds.
       There is one cheat that saves 64 picoseconds.
-    """.trimIndent()
+    """
+        .trimIndent()
   }
 
   @Test
@@ -59,7 +61,8 @@ class Day20Test {
     val racetrack = sample.lines().toRacetrack()
     val savings = racetrack.savings(20).filterKeys { it >= 50 }
 
-    savingsToString(savings) shouldBe """
+    savingsToString(savings) shouldBe
+      """
       There are 32 cheats that save 50 picoseconds.
       There are 31 cheats that save 52 picoseconds.
       There are 29 cheats that save 54 picoseconds.
@@ -74,7 +77,8 @@ class Day20Test {
       There are 22 cheats that save 72 picoseconds.
       There are 4 cheats that save 74 picoseconds.
       There are 3 cheats that save 76 picoseconds.
-    """.trimIndent()
+    """
+        .trimIndent()
   }
 
   @Test
@@ -88,14 +92,14 @@ class Day20Test {
     val input = inputFile("day20.txt").readNonBlankLines()
     part2(input) shouldBe "1027164"
   }
-
 }
 
 private fun savingToString(saving: Int, cheats: List<Cheat>): String =
   if (cheats.size == 1) "There is one cheat that saves $saving picoseconds."
   else "There are ${cheats.size} cheats that save $saving picoseconds."
 
-private fun savingsToString(savings: Map<Int, List<Cheat>>): String = savings
-  .toSortedMap()
-  .map { (saving, cheats) -> savingToString(saving, cheats) }
-  .joinToString(System.lineSeparator())
+private fun savingsToString(savings: Map<Int, List<Cheat>>): String =
+  savings
+    .toSortedMap()
+    .map { (saving, cheats) -> savingToString(saving, cheats) }
+    .joinToString(System.lineSeparator())

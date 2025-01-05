@@ -3,9 +3,7 @@ package day19
 fun String.isPossibleArragement(patterns: List<String>): Boolean {
   if (isEmpty()) return true
 
-  return patterns.filter { startsWith(it) }.any {
-    removePrefix(it).isPossibleArragement(patterns)
-  }
+  return patterns.filter { startsWith(it) }.any { removePrefix(it).isPossibleArragement(patterns) }
 }
 
 class Designer(private val patterns: List<String>) {
@@ -16,13 +14,12 @@ class Designer(private val patterns: List<String>) {
       1
     } else {
       cache.getOrPut(design) {
-        patterns.filter { pattern -> design.startsWith(pattern) }
+        patterns
+          .filter { pattern -> design.startsWith(pattern) }
           .sumOf { pattern -> countArrangements(design.removePrefix(pattern)) }
       }
     }
   }
-
-
 }
 
 // Part 1

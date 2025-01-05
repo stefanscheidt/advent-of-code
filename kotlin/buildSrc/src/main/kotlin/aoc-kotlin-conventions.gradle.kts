@@ -14,7 +14,7 @@ dependencies {
   implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
 
   // https://junit.org/junit5/docs/current/user-guide/
-  testImplementation(platform("org.junit:junit-bom:5.11.3"))
+  testImplementation(platform("org.junit:junit-bom:5.11.4"))
   testImplementation("org.junit.jupiter:junit-jupiter")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -25,5 +25,5 @@ dependencies {
   testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 
   // https://mockk.io/
-  testImplementation("io.mockk:mockk:1.13.13")
+  testImplementation("io.mockk:mockk:1.13.14")
 }
