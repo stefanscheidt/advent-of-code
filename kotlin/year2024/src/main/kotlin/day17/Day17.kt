@@ -91,16 +91,13 @@ fun part1(input: List<String>): String = Computer.from(input).run().joinToString
 
 fun part2(input: List<String>): String =
   Computer.from(input).let { computer ->
-    computer
-      .program
+    computer.program
       .reversed()
       .fold(listOf(0L)) { candidates, instruction ->
         candidates.flatMap { candidate ->
           val shifted = candidate shl 3
           (shifted..shifted + 8).mapNotNull { attempt ->
-            attempt.takeIf { regA ->
-              computer.copy(regA = regA).run().first() == instruction
-            }
+            attempt.takeIf { regA -> computer.copy(regA = regA).run().first() == instruction }
           }
         }
       }
