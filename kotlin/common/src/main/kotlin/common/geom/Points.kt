@@ -11,9 +11,15 @@ operator fun Point2D.minus(other: Point2D): Point2D = plus(-other)
 operator fun Int.times(point2D: Point2D): Point2D =
   point2D.copy(x = this * point2D.x, y = this * point2D.y)
 
+fun p2(x: Int, y: Int): Point2D = Point2D(x, y)
+
 val origin2D = Point2D(0, 0)
 
-fun p2(x: Int, y: Int): Point2D = Point2D(x, y)
+val cardinalDirections = listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
+
+val Point2D.cardinalNeighbors: List<Point2D>
+  get() = cardinalDirections.map { this + it }
+
 
 data class Point3D(val x: Long, val y: Long, val z: Long)
 

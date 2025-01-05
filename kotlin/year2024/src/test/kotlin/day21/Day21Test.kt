@@ -4,6 +4,8 @@ import common.io.inputFile
 import common.io.readNonBlankLines
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 class Day21Test {
 
@@ -17,26 +19,21 @@ class Day21Test {
     """
       .trimIndent()
 
-  @Test
-  fun `compute moves`() {
-    moves("029A") shouldBe "<A^A>^^AvvvA"
-    moves("101A") shouldBe "^<<A>vA^<A>>vA"
-  }
-
-  @Test
-  fun `compute directions`() {
-    directions("<^>") shouldBe "v<<A>^A>vA"
-  }
-
-  @Test
-  fun `compute shortest sequence`() {
-    shortestSequence("029A") shouldBe 68
-    shortestSequence("379A") shouldBe 64
+  @ParameterizedTest
+  @CsvSource(
+    "029A,<vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A",
+    "980A,<v<A>>^AAAvA^A<vA<AA>>^AvAA<^A>A<v<A>A>^AAAvA<^A>A<vA>^A<A>A",
+    "179A,<v<A>>^A<vA<A>>^AAvAA<^A>A<v<A>>^AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A",
+    "456A,<v<A>>^AA<vA<A>>^AAvAA<^A>A<vA>^A<A>A<vA>^A<A>A<v<A>A>^AAvA<^A>A",
+    "379A,<v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A",
+  )
+  fun `compute shortest sequence`(code: String, sequence: String) {
+    shortestSequenceLength(code, 2) shouldBe sequence.length
   }
 
   @Test
   fun `compute complexity`() {
-    complexity("029A") shouldBe 68 * 29
+    complexity("029A", 2) shouldBe 68 * 29
   }
 
   @Test
@@ -45,19 +42,14 @@ class Day21Test {
   }
 
   @Test
-  fun `solve part two with sample input`() {
-    part2(sample.lines()) shouldBe "ANSWER2"
-  }
-
-  @Test
   fun `solve part one`() {
     val input = inputFile("day21.txt").readNonBlankLines()
-    part1(input) shouldBe "ANSWER1"
+    part1(input) shouldBe "152942"
   }
 
   @Test
   fun `solve part two`() {
     val input = inputFile("day21.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "189235298434780"
   }
 }

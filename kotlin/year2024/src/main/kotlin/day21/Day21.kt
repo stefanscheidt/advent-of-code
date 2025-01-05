@@ -1,9 +1,10 @@
 package day21
 
 import common.geom.Point2D
+import common.geom.cardinalNeighbors
 import common.geom.minus
 import common.geom.p2
-import common.geom.plus
+import java.util.PriorityQueue
 
 // Keypads
 
@@ -27,7 +28,38 @@ val numPad =
 val dirPad =
   mapOf(p2(1, 0) to '^', p2(2, 0) to 'A', p2(0, 1) to '<', p2(1, 1) to 'v', p2(2, 1) to '>')
 
-fun Keypad.findPaths(start: Point2D, end: Point2D): List<String> = TODO()
+fun Keypad.findPaths(start: Point2D, end: Point2D): List<String> {
+  val queue = PriorityQueue<Pair<List<Point2D>, Int>>(compareBy { it.second })
+  queue.add(listOf(start) to 0)
+  val seen = mutableMapOf<Point2D, Int>()
+  var finalCost: Int? = null
+  val paths = mutableListOf<String>()
+
+  while (queue.isNotEmpty()) {
+    val (path, cost) = queue.poll()
+    val current = path.last()
+    if (finalCost != null && cost > finalCost) {
+      return paths
+    } else if (path.last() == end) {
+      finalCost = cost
+      val newPath = path.zipWithNext().map { (from, to) ->
+        when (val diff = to - from) {
+          p2(1, 0) -> '>'
+          p2(-1, 0) -> '<'
+          p2(0, -1) -> '^'
+          p2(0, 1) -> 'v'
+          else -> error("Invalid direction: $diff")
+        }
+      }.joinToString("") + "A"
+      paths.add(newPath)
+    } else if (seen[current] == null || seen.getValue(current) >= cost) {
+      seen[current] = cost
+      current.cardinalNeighbors.filter { it in keys }.forEach { queue.add(path + it to cost + 1) }
+    }
+  }
+
+  return paths
+}
 
 fun Keypad.allPaths(): Map<Pair<Char, Char>, List<String>> {
   val allStartsAndEnds = keys.flatMap { start -> keys.map { end -> start to end } }
@@ -36,128 +68,38 @@ fun Keypad.allPaths(): Map<Pair<Char, Char>, List<String>> {
   }
 }
 
-// Moves
+val allNumPaths = numPad.allPaths()
 
-val numKeys =
-  mapOf(
-    '0' to p2(-1, 0),
-    'A' to p2(0, 0),
-    '1' to p2(-2, 1),
-    '2' to p2(-1, 1),
-    '3' to p2(0, 1),
-    '4' to p2(-2, 2),
-    '5' to p2(-1, 2),
-    '6' to p2(0, 2),
-    '7' to p2(-2, 3),
-    '8' to p2(-1, 3),
-    '9' to p2(0, 3),
-  )
+val allDirPaths = dirPad.allPaths()
 
-val dirKeys =
-  mapOf('<' to p2(-2, 0), 'v' to p2(-1, 0), '>' to p2(0, 0), '^' to p2(-1, 1), 'A' to p2(0, 1))
-
-fun moves(code: String): String =
-  "A$code"
-    .zipWithNext()
-    .map { (from, to) ->
-      val pFrom = numKeys[from]!!
-      val pTo = numKeys[to]!!
-      pTo - pFrom
-    }
-    .joinToString("") { (dx, dy) ->
-      buildString {
-        if (dx > 0) append(">".repeat(dx))
-        if (dy > 0) append("^".repeat(dy))
-        if (dx < 0) append("<".repeat(-dx))
-        if (dy < 0) append("v".repeat(-dy))
-        append("A")
+fun shortestSequenceLength(
+  code: String,
+  indirections: Int,
+  allPaths: Map<Pair<Char, Char>, List<String>> = allNumPaths,
+  cache: MutableMap<Pair<String, Int>, Long> = mutableMapOf(),
+): Long =
+  cache.getOrPut(code to indirections) {
+    "A$code"
+      .zipWithNext()
+      .sumOf { transition ->
+        val paths = allPaths.getValue(transition)
+        if (indirections == 0) {
+          paths.minOf { it.length }.toLong()
+        } else {
+          paths.minOf { shortestSequenceLength(it, indirections - 1, allDirPaths, cache) }
+        }
       }
-    }
+  }
 
-fun directions(moves: String): String =
-  "A$moves"
-    .zipWithNext()
-    .map { (from, to) ->
-      val pFrom = dirKeys[from]!!
-      val pTo = dirKeys[to]!!
-      (pTo - pFrom)
-    }
-    .joinToString("") { (dx, dy) ->
-      buildString {
-        if (dx > 0) append(">".repeat(dx))
-        if (dy > 0) append("^".repeat(dy))
-        if (dy < 0) append("v".repeat(-dy))
-        if (dx < 0) append("<".repeat(-dx))
-        append("A")
-      }
-    }
-
-fun shortestSequence(code: String): Int = moves(code).let(::directions).let(::directions).length
-
-fun complexity(code: String): Int = shortestSequence(code) * code.substringBefore("A").toInt()
+fun complexity(code: String, indirections: Int): Long =
+  shortestSequenceLength(code, indirections) * code.substringBefore("A").toLong()
 
 // Part 1
 
-fun part1(input: List<String>): String {
-  return input.sumOf(::complexity).toString()
-}
+fun part1(input: List<String>): String =
+  input.sumOf { code -> complexity(code, 2) }.toString()
 
 // Part 2
 
-fun part2(input: List<String>): String {
-  return "TODO2"
-}
-
-// Debugging
-
-val directions =
-  mapOf('<' to p2(-1, 0), '>' to p2(1, 0), '^' to p2(0, 1), 'v' to p2(0, -1), 'A' to p2(0, 0))
-
-val numPos = numKeys.map { (numKey, position) -> position to numKey }.toMap()
-val dirPos = dirKeys.map { (dirKey, position) -> position to dirKey }.toMap()
-
-fun moveOnNumPad(moves: String): String =
-  moves
-    .fold(Pair(numKeys['A']!!, "")) { (pos, result), move ->
-      if (move == 'A') {
-        Pair(pos, result + numPos[pos]!!)
-      } else {
-        Pair(pos + directions[move]!!, result)
-      }
-    }
-    .second
-
-fun moveOnDirPad(moves: String): String =
-  moves
-    .fold(Pair(dirKeys['A']!!, "")) { (pos, result), move ->
-      if (move == 'A') {
-        Pair(pos, result + dirPos[pos]!!)
-      } else {
-        Pair(pos + directions[move]!!, result)
-      }
-    }
-    .second
-
-fun main() {
-  "<v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A"
-    .also { println(it) }
-    .let(::moveOnDirPad)
-    .also { println(it) }
-    .let(::moveOnDirPad)
-    .also { println(it) }
-    .let(::moveOnNumPad)
-    .let(::println)
-
-  moves("379A")
-    .also { println(it) }
-    .let(::directions)
-    .also { println(it) }
-    .let(::directions)
-    .also { println(it) }
-    .let(::moveOnDirPad)
-    .also { println(it) }
-    .let(::moveOnDirPad)
-    .also { println(it) }
-    .let(::moveOnNumPad)
-    .let(::println)
-}
+fun part2(input: List<String>): String =
+  input.sumOf { code -> complexity(code, 25) }.toString()
