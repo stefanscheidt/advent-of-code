@@ -1,7 +1,7 @@
 package day10
 
 import common.geom.Point2D
-import common.geom.plus
+import common.geom.cardinalNeighbors
 
 // Grid
 
@@ -13,12 +13,6 @@ fun topoMapOf(lines: List<String>): List<List<Int>> =
 operator fun TopoMap.contains(p: Point2D): Boolean = p.y in indices && p.x in this[p.y].indices
 
 operator fun TopoMap.get(p: Point2D): Int = this[p.y][p.x]
-
-val cardinalDirections: List<Point2D> =
-  listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
-
-val Point2D.cardinalNeighbors: List<Point2D>
-  get() = cardinalDirections.map { this + it }
 
 // Count Paths
 
@@ -37,7 +31,7 @@ fun TopoMap.countReachablePeeks(start: Point2D): Int {
         queue.addAll(
           position.cardinalNeighbors.filter { neighbour ->
             neighbour in this && this[neighbour] == this[position] + 1
-          }
+          },
         )
       }
     }
@@ -58,7 +52,7 @@ fun TopoMap.countPaths(start: Point2D): Int {
       queue.addAll(
         position.cardinalNeighbors.filter { neighbour ->
           neighbour in this && this[neighbour] == this[position] + 1
-        }
+        },
       )
     }
   }

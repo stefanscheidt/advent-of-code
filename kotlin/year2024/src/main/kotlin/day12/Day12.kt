@@ -1,14 +1,7 @@
 package day12
 
 import common.geom.Point2D
-import common.geom.plus
-
-// Points
-
-val cardinalDirections = listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Point2D(-1, 0))
-
-val Point2D.cardinalNeighbors: List<Point2D>
-  get() = cardinalDirections.map { this + it }
+import common.geom.cardinalNeighbors
 
 // Garden
 
