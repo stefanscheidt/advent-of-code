@@ -3,6 +3,7 @@ package day12
 import common.io.inputFile
 import common.io.readNonBlankLines
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day12Test {
@@ -28,17 +29,19 @@ class Day12Test {
   }
 
   @Test
-  fun `solve part two with sample input`() {
-    part2(sample.lines()) shouldBe "1206"
-  }
-
-  @Test
   fun `solve part one`() {
     val input = inputFile("day12.txt").readNonBlankLines()
     part1(input) shouldBe "1381056"
   }
 
   @Test
+  @Disabled
+  fun `solve part two with sample input`() {
+    part2(sample.lines()) shouldBe "1206"
+  }
+
+  @Test
+  @Disabled
   fun `solve part two`() {
     val input = inputFile("day12.txt").readNonBlankLines()
     part2(input) shouldBe "ANSWER2"

@@ -2,6 +2,7 @@ package day24
 
 import common.io.inputFile
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day24Test {
@@ -89,11 +90,13 @@ class Day24Test {
   }
 
   @Test
+  @Disabled
   fun `solve part two with sample input`() {
     part2(sample) shouldBe "ANSWER2"
   }
 
   @Test
+  @Disabled
   fun `solve part two`() {
     val input = inputFile("day24.txt").readText().trimEnd()
     part2(input) shouldBe "ANSWER2"

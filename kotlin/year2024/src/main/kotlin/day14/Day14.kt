@@ -47,10 +47,7 @@ fun part1(input: List<String>, width: Int = 101, hight: Int = 103): String {
 
 // Part 2
 
-fun part2(input: List<String>): String {
-  return "TODO"
-}
-
+// My solution for part 2: 7093
 fun main() {
   val input = inputFile("day14.txt").readNonBlankLines()
   var robots = input.map(String::toRobot)
