@@ -20,7 +20,6 @@ val cardinalDirections = listOf(Point2D(0, -1), Point2D(1, 0), Point2D(0, 1), Po
 val Point2D.cardinalNeighbors: List<Point2D>
   get() = cardinalDirections.map { this + it }
 
-
 data class Point3D(val x: Long, val y: Long, val z: Long)
 
 operator fun Point3D.unaryMinus(): Point3D = copy(x = -x, y = -y, z = -z)

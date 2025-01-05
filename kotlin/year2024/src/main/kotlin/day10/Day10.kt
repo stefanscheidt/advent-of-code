@@ -31,7 +31,7 @@ fun TopoMap.countReachablePeeks(start: Point2D): Int {
         queue.addAll(
           position.cardinalNeighbors.filter { neighbour ->
             neighbour in this && this[neighbour] == this[position] + 1
-          },
+          }
         )
       }
     }
@@ -52,7 +52,7 @@ fun TopoMap.countPaths(start: Point2D): Int {
       queue.addAll(
         position.cardinalNeighbors.filter { neighbour ->
           neighbour in this && this[neighbour] == this[position] + 1
-        },
+        }
       )
     }
   }

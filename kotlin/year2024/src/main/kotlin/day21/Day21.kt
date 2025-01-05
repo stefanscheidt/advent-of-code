@@ -42,15 +42,19 @@ fun Keypad.findPaths(start: Point2D, end: Point2D): List<String> {
       return paths
     } else if (path.last() == end) {
       finalCost = cost
-      val newPath = path.zipWithNext().map { (from, to) ->
-        when (val diff = to - from) {
-          p2(1, 0) -> '>'
-          p2(-1, 0) -> '<'
-          p2(0, -1) -> '^'
-          p2(0, 1) -> 'v'
-          else -> error("Invalid direction: $diff")
-        }
-      }.joinToString("") + "A"
+      val newPath =
+        path
+          .zipWithNext()
+          .map { (from, to) ->
+            when (val diff = to - from) {
+              p2(1, 0) -> '>'
+              p2(-1, 0) -> '<'
+              p2(0, -1) -> '^'
+              p2(0, 1) -> 'v'
+              else -> error("Invalid direction: $diff")
+            }
+          }
+          .joinToString("") + "A"
       paths.add(newPath)
     } else if (seen[current] == null || seen.getValue(current) >= cost) {
       seen[current] = cost
@@ -79,16 +83,14 @@ fun shortestSequenceLength(
   cache: MutableMap<Pair<String, Int>, Long> = mutableMapOf(),
 ): Long =
   cache.getOrPut(code to indirections) {
-    "A$code"
-      .zipWithNext()
-      .sumOf { transition ->
-        val paths = allPaths.getValue(transition)
-        if (indirections == 0) {
-          paths.minOf { it.length }.toLong()
-        } else {
-          paths.minOf { shortestSequenceLength(it, indirections - 1, allDirPaths, cache) }
-        }
+    "A$code".zipWithNext().sumOf { transition ->
+      val paths = allPaths.getValue(transition)
+      if (indirections == 0) {
+        paths.minOf { it.length }.toLong()
+      } else {
+        paths.minOf { shortestSequenceLength(it, indirections - 1, allDirPaths, cache) }
       }
+    }
   }
 
 fun complexity(code: String, indirections: Int): Long =
@@ -96,10 +98,8 @@ fun complexity(code: String, indirections: Int): Long =
 
 // Part 1
 
-fun part1(input: List<String>): String =
-  input.sumOf { code -> complexity(code, 2) }.toString()
+fun part1(input: List<String>): String = input.sumOf { code -> complexity(code, 2) }.toString()
 
 // Part 2
 
-fun part2(input: List<String>): String =
-  input.sumOf { code -> complexity(code, 25) }.toString()
+fun part2(input: List<String>): String = input.sumOf { code -> complexity(code, 25) }.toString()
