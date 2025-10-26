@@ -9,11 +9,11 @@ class StringsTest {
   fun `compute rows`() {
     val s =
       """
-            ABC
-            DE
-            FGHI
-            JKL
-        """
+          ABC
+          DE
+          FGHI
+          JKL
+      """
         .trimIndent()
 
     s.rows() shouldBe listOf("ADFJ", "BEGK", "C HL", "  I ")

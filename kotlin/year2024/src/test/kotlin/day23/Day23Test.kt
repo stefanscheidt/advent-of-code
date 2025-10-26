@@ -49,19 +49,19 @@ class Day23Test {
     val connections = sample.lines().toConnectionsSet()
     val expectedTriples =
       """
-      aq,cg,yn
-      aq,vc,wq
-      co,de,ka
-      co,de,ta
-      co,ka,ta
-      de,ka,ta
-      kh,qp,ub
-      qp,td,wh
-      tb,vc,wq
-      tc,td,wh
-      td,wh,yn
-      ub,vc,wq
-    """
+        aq,cg,yn
+        aq,vc,wq
+        co,de,ka
+        co,de,ta
+        co,ka,ta
+        de,ka,ta
+        kh,qp,ub
+        qp,td,wh
+        tb,vc,wq
+        tc,td,wh
+        td,wh,yn
+        ub,vc,wq
+      """
         .trimIndent()
         .lines()
         .map { it.split(",").toSet() }

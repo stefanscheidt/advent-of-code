@@ -17,12 +17,12 @@ class Day17Test {
   fun `solve part one with sample input`() {
     val sample =
       """
-      Register A: 729
-      Register B: 0
-      Register C: 0
-  
-      Program: 0,1,5,4,3,0
-      """
+          Register A: 729
+          Register B: 0
+          Register C: 0
+      
+          Program: 0,1,5,4,3,0
+          """
         .trimIndent()
     part1(sample.lines()) shouldBe "4,6,3,5,6,3,5,2,1,0"
   }

@@ -27,17 +27,17 @@ class Day14Test {
 
     val tilted =
       """
-            OOOO.#.O..
-            OO..#....#
-            OO..O##..O
-            O..#.OO...
-            ........#.
-            ..#....#.#
-            ..O..#.O.O
-            ..O.......
-            #....###..
-            #....#....
-        """
+          OOOO.#.O..
+          OO..#....#
+          OO..O##..O
+          O..#.OO...
+          ........#.
+          ..#....#.#
+          ..O..#.O.O
+          ..O.......
+          #....###..
+          #....#....
+      """
         .trimIndent()
 
     rows.map(String::tiltStart) shouldBe tilted.rows()
@@ -52,11 +52,11 @@ class Day14Test {
   fun `join lines`() {
     val input =
       """
-            abc
-            def
-            ghi
-            jkl
-        """
+          abc
+          def
+          ghi
+          jkl
+      """
         .trimIndent()
 
     val lines = input.lines()
@@ -68,11 +68,11 @@ class Day14Test {
   fun `join rows`() {
     val input =
       """
-            abc
-            def
-            ghi
-            jkl
-        """
+          abc
+          def
+          ghi
+          jkl
+      """
         .trimIndent()
 
     val rows = input.rows()
@@ -84,47 +84,47 @@ class Day14Test {
   fun `cycle around`() {
     val afterOneCycle =
       """
-            .....#....
-            ....#...O#
-            ...OO##...
-            .OO#......
-            .....OOO#.
-            .O#...O#.#
-            ....O#....
-            ......OOOO
-            #...O###..
-            #..OO#....
-        """
+          .....#....
+          ....#...O#
+          ...OO##...
+          .OO#......
+          .....OOO#.
+          .O#...O#.#
+          ....O#....
+          ......OOOO
+          #...O###..
+          #..OO#....
+      """
         .trimIndent()
 
     val afterTwoCycles =
       """
-            .....#....
-            ....#...O#
-            .....##...
-            ..O#......
-            .....OOO#.
-            .O#...O#.#
-            ....O#...O
-            .......OOO
-            #..OO###..
-            #.OOO#...O
-        """
+          .....#....
+          ....#...O#
+          .....##...
+          ..O#......
+          .....OOO#.
+          .O#...O#.#
+          ....O#...O
+          .......OOO
+          #..OO###..
+          #.OOO#...O
+      """
         .trimIndent()
 
     val afterThreeCycles =
       """
-            .....#....
-            ....#...O#
-            .....##...
-            ..O#......
-            .....OOO#.
-            .O#...O#.#
-            ....O#...O
-            .......OOO
-            #...O###.O
-            #.OOO#...O
-        """
+          .....#....
+          ....#...O#
+          .....##...
+          ..O#......
+          .....OOO#.
+          .O#...O#.#
+          ....O#...O
+          .......OOO
+          #...O###.O
+          #.OOO#...O
+      """
         .trimIndent()
 
     val cycleOne = sample.cycle()

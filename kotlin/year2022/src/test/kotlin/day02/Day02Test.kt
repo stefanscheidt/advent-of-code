@@ -7,10 +7,10 @@ class Day02Test {
 
   private val sample =
     """
-            A Y
-            B X
-            C Z
-        """
+        A Y
+        B X
+        C Z
+    """
       .trimIndent()
       .lines()
 

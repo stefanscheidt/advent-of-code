@@ -15,9 +15,9 @@ class Day15Test {
   fun `parse ignores new lines and trailing commans`() {
     val input =
       """
-            ABC,
-            DEF,
-        """
+          ABC,
+          DEF,
+      """
         .trimIndent()
 
     parseInput(input) shouldBe listOf("ABC", "DEF")

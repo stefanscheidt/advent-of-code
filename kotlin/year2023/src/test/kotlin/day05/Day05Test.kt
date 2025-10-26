@@ -48,10 +48,10 @@ class Day05Test {
   fun `parse care instruction`() {
     val input =
       """
-            seed-to-soil map:
-            50 98 2
-            52 50 48
-        """
+          seed-to-soil map:
+          50 98 2
+          52 50 48
+      """
         .trimIndent()
 
     val careInstruction = parseCareInstruction(input)

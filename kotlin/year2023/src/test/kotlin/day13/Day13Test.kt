@@ -38,14 +38,14 @@ class Day13Test {
   fun `find reflection across vertical line`() {
     val pattern =
       """
-            #.##..##.
-            ..#.##.#.
-            ##......#
-            ##......#
-            ..#.##.#.
-            ..##..##.
-            #.#.##.#.
-         """
+         #.##..##.
+         ..#.##.#.
+         ##......#
+         ##......#
+         ..#.##.#.
+         ..##..##.
+         #.#.##.#.
+      """
         .trimIndent()
 
     pattern.lines().mirrorCandidates() shouldBe setOf(5)
@@ -55,14 +55,14 @@ class Day13Test {
   fun `find reflection across horizontal line`() {
     val pattern =
       """
-            #...##..#
-            #....#..#
-            ..##..###
-            #####.##.
-            #####.##.
-            ..##..###
-            #....#..#
-         """
+         #...##..#
+         #....#..#
+         ..##..###
+         #####.##.
+         #####.##.
+         ..##..###
+         #....#..#
+      """
         .trimIndent()
 
     pattern.rows().mirrorCandidates() shouldBe setOf(4)
