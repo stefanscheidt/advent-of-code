@@ -48,11 +48,7 @@ class Day01Test {
 
   @ParameterizedTest
   @CsvSource(value = ["50,-68,1", "82,-30,0", "52,48,1", "0,-5,0"])
-  fun `count visits of zero`(
-    position: Int,
-    update: Int,
-    visits: Int,
-  ) {
+  fun `count visits of zero`(position: Int, update: Int, visits: Int) {
     visits(position, update) shouldBe visits
   }
 }
