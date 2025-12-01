@@ -47,13 +47,12 @@ class Day01Test {
   }
 
   @ParameterizedTest
-  @CsvSource(value = ["50,-68,82,1", "82,-30,52,0", "52,48,0,1", "0,-5,95,0"])
-  fun `update position and count visits of zero`(
+  @CsvSource(value = ["50,-68,1", "82,-30,0", "52,48,1", "0,-5,0"])
+  fun `count visits of zero`(
     position: Int,
     update: Int,
-    newPosition: Int,
     visits: Int,
   ) {
-    Pair((position + update).mod(100), visits(position, update)) shouldBe Pair(newPosition, visits)
+    visits(position, update) shouldBe visits
   }
 }
