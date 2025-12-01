@@ -43,24 +43,17 @@ class Day01Test {
   @Test
   fun `solve part two`() {
     val input = inputFile("day01.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "6099"
   }
 
   @ParameterizedTest
-  @CsvSource(value = [
-    "50,18",
-    "50,-18",
-    "50,68",
-    "50,-68",
-    "50,168",
-    "50,-168",
-  ])
-  fun sandbox(position: Int, update: Int) {
-    val quotient = update / 100
-    val remainder = update % 100
-    println("position: $position, update: $update, quotient: $quotient, remainder: $remainder")
-    println("new position: ${(position + update + 100 ) % 100}")
-    println("passes: ${((position + update ) / 100) + (if (position + update < 0) 1 else 0)}")
-    println()
-  } 
+  @CsvSource(value = ["50,-68,82,1", "82,-30,52,0", "52,48,0,1", "0,-5,95,0"])
+  fun `update position and count visits of zero`(
+    position: Int,
+    update: Int,
+    newPosition: Int,
+    visits: Int,
+  ) {
+    updatePosition(position, update) shouldBe Pair(newPosition, visits)
+  }
 }
