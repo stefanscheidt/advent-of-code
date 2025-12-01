@@ -38,7 +38,7 @@ fun parseInput(input: String): Int {
 }
 
 fun visits(position: Int, update: Int): Int {
-  val newPosition = position + update % 100
+  val newPosition = (position + update).rem(100)
   val offset =
     if (
       (position > 0 && (newPosition <= 0 || newPosition >= 100)) ||
