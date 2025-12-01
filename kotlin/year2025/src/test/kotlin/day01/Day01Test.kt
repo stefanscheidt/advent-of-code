@@ -54,6 +54,6 @@ class Day01Test {
     newPosition: Int,
     visits: Int,
   ) {
-    updatePosition(position, update) shouldBe Pair(newPosition, visits)
+    Pair((position + update).mod(100), visits(position, update)) shouldBe Pair(newPosition, visits)
   }
 }
