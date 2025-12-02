@@ -21,23 +21,29 @@ class Day02Test {
   @Test
   fun `solve part one`() {
     val input = inputFile("day02.txt").readNonBlankLines()
-    part1(input) shouldBe "ANSWER1"
+    part1(input) shouldBe "17077011375"
   }
 
   @Test
   fun `solve part two with sample input`() {
-    part2(sample.lines()) shouldBe "ANSWER2"
+    part2(sample.lines()) shouldBe "4174379265"
   }
 
   @Test
   fun `solve part two`() {
     val input = inputFile("day02.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "36037497037"
   }
 
   @Test
-  fun `invalid ids in range`() {
-    invalidIds(11L, 22L) shouldBe listOf(11L, 22L)
-    invalidIds(95L, 115L) shouldBe listOf(99L)
+  fun `invalid ids in range for part 1`() {
+    invalidIds1(11L, 22L) shouldBe listOf(11L, 22L)
+    invalidIds1(95L, 115L) shouldBe listOf(99L)
+  }
+
+  @Test
+  fun `invalid ids in range for part 2`() {
+    invalidIds2(11L, 22L) shouldBe listOf(11L, 22L)
+    invalidIds2(95L, 115L) shouldBe listOf(99L, 111L)
   }
 }
