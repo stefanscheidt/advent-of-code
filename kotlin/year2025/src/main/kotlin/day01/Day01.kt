@@ -20,7 +20,7 @@ fun part2(input: List<String>): String {
     input
       .map(::parseInput)
       .runningFold(Pair(50, 0)) { (position, _), update ->
-        Pair((position + update).mod(100), visits(position, update))
+        Pair((position + update).mod(100), visitsOfZero(position, update))
       }
       .sumOf { it.second }
 
@@ -37,14 +37,12 @@ fun parseInput(input: String): Int {
   }
 }
 
-fun visits(position: Int, update: Int): Int {
-  val newPosition = (position + update).rem(100)
-  val offset =
-    if (
-      (position > 0 && (newPosition <= 0 || newPosition >= 100)) ||
-        (position < 0 && (newPosition >= 0 || newPosition <= -100))
-    )
-      1
-    else 0
-  return abs(update / 100) + offset
+fun visitsOfZero(position: Int, update: Int): Int {
+  val fullTurns = abs(update / 100)
+  val signedRemainingClicks = update.rem(100)
+  val signedNewPosition = position + signedRemainingClicks
+  val additionalVisit =
+      (position > 0 && (signedNewPosition <= 0 || signedNewPosition >= 100)) ||
+        (position < 0 && (signedNewPosition >= 0 || signedNewPosition <= -100))
+  return fullTurns + (if (additionalVisit) 1 else 0)
 }
