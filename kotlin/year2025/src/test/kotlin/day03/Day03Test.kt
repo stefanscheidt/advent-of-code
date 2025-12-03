@@ -43,7 +43,7 @@ class Day03Test {
   @ParameterizedTest
   @CsvSource(value = ["987654321111111,98", "811111111111119,89"])
   fun `compute max joltage for part one`(bank: String, maxJoltage: Int) {
-    joltage1(bank) shouldBe maxJoltage
+    joltage(bank, 2) shouldBe maxJoltage
   }
 
   @ParameterizedTest

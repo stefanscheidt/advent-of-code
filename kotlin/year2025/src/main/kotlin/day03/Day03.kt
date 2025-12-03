@@ -3,7 +3,7 @@ package day03
 // Part 1
 
 fun part1(input: List<String>): String {
-  return input.sumOf(::joltage1).toString()
+  return input.sumOf { joltage(it, 2) }.toString()
 }
 
 // Part 2
@@ -11,17 +11,6 @@ fun part1(input: List<String>): String {
 fun part2(input: List<String>): String {
   return input.sumOf { joltage(it, 12) }.toString()
 }
-
-fun joltage1(bank: String): Int =
-  (0..<bank.length - 1)
-    .flatMap { firstIndex ->
-      (firstIndex + 1..<bank.length).map { secondIndex ->
-        val firstDigit = bank[firstIndex]
-        val secondDigit = bank[secondIndex]
-        "$firstDigit$secondDigit".toInt()
-      }
-    }
-    .max()
 
 /**
  * Computes the maximum joltage by selecting exactly [batteries] digits from [bank].
