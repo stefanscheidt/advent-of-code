@@ -59,7 +59,7 @@ class Day03Test {
   fun `compute joltage for given bank and battery count`(
     bank: String,
     batteries: Int,
-    expected: Long
+    expected: Long,
   ) {
     joltage(bank, batteries) shouldBe expected
   }
