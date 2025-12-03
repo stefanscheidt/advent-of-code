@@ -31,18 +31,36 @@ class Day03Test {
 
   @Test
   fun `solve part two with sample input`() {
-    part2(sample.lines()) shouldBe "ANSWER2"
+    part2(sample.lines()) shouldBe "3121910778619"
   }
 
   @Test
   fun `solve part two`() {
     val input = inputFile("day03.txt").readNonBlankLines()
-    part2(input) shouldBe "ANSWER2"
+    part2(input) shouldBe "171518260283767"
   }
 
   @ParameterizedTest
   @CsvSource(value = ["987654321111111,98", "811111111111119,89"])
   fun `compute max joltage for part one`(bank: String, maxJoltage: Int) {
-    maxJoltage1(bank) shouldBe maxJoltage
+    joltage1(bank) shouldBe maxJoltage
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+    value =
+      [
+        "987654321111111,12,987654321111",
+        "811111111111119,12,811111111119",
+        "234234234234278,12,434234234278",
+        "818181911112111,12,888911112111",
+      ]
+  )
+  fun `compute joltage for given bank and battery count`(
+    bank: String,
+    batteries: Int,
+    expected: Long
+  ) {
+    joltage(bank, batteries) shouldBe expected
   }
 }
