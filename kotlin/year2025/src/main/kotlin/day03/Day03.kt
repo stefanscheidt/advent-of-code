@@ -12,43 +12,30 @@ fun part2(input: List<String>): String {
   return input.sumOf { joltage(it, 12) }.toString()
 }
 
-/**
- * Computes the maximum joltage by selecting exactly [batteries] digits from [bank].
- *
- * Uses a greedy algorithm: for each position in the result, select the largest available digit that
- * still leaves enough remaining digits in the bank to complete the selection.
- *
- * Example: bank="234234234234278", batteries=12
- * - Position 0: Search indices 0-3 (need 12 more), find '4' at index 3 → result="4"
- * - Position 1: Search indices 4-5 (need 11 more), find '3' at index 4 → result="43"
- * - Continue until 12 digits selected → result="434234234278"
- */
-fun joltage(bank: String, batteries: Int): Long =
+fun joltage(bank: String, numberOfBatteries: Int): Long =
   buildString {
       // Current position in the bank string
       var currentIndex = 0
 
-      repeat(batteries) { position ->
-        // Calculate how many more digits we need after this one
-        val remainingDigits = batteries - position
-
+      (numberOfBatteries downTo 1).forEach { remainingDigits ->
         // Calculate the furthest index we can search while still leaving enough digits
-        // If we pick a digit at index i, we need at least (remainingDigits - 1) digits after it
-        val searchEndIndex = bank.length - (remainingDigits - 1)
+        val searchEndIndex = bank.length - remainingDigits
 
         // Find the maximum digit in the valid search window
         var maxDigit = bank[currentIndex]
         var maxDigitIndex = currentIndex
-
-        for (i in currentIndex until searchEndIndex) {
-          if (bank[i] > maxDigit) {
-            maxDigit = bank[i]
-            maxDigitIndex = i
+        for (index in currentIndex..searchEndIndex) {
+          // use that we can compare digits as chars here
+          if (bank[index] > maxDigit) {
+            maxDigit = bank[index]
+            maxDigitIndex = index
           }
         }
 
-        // Add the maximum digit to result and move past it in the bank
+        // Add the maximum digit to result
         this.append(maxDigit)
+
+        // move past found max digit in the bank
         currentIndex = maxDigitIndex + 1
       }
     }
