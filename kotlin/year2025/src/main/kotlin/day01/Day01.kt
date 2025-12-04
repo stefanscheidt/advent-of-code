@@ -42,7 +42,7 @@ fun visitsOfZero(position: Int, update: Int): Int {
   val signedRemainingClicks = update.rem(100)
   val signedNewPosition = position + signedRemainingClicks
   val additionalVisit =
-      (position > 0 && (signedNewPosition <= 0 || signedNewPosition >= 100)) ||
-        (position < 0 && (signedNewPosition >= 0 || signedNewPosition <= -100))
+    (position > 0 && (signedNewPosition <= 0 || signedNewPosition >= 100)) ||
+      (position < 0 && (signedNewPosition >= 0 || signedNewPosition <= -100))
   return fullTurns + (if (additionalVisit) 1 else 0)
 }
