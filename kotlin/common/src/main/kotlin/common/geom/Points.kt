@@ -1,5 +1,7 @@
 package common.geom
 
+import kotlin.math.sqrt
+
 data class Point2D(val x: Int, val y: Int)
 
 operator fun Point2D.unaryMinus(): Point2D = copy(x = -x, y = -y)
@@ -35,3 +37,10 @@ operator fun Int.times(point3D: Point3D): Point3D =
 val origin3D = Point3D(0L, 0L, 0L)
 
 fun p3(x: Long, y: Long, z: Long): Point3D = Point3D(x, y, z)
+
+fun euclideanDistance(p1: Point3D, p2: Point3D): Double {
+  val dx = (p2.x - p1.x).toDouble()
+  val dy = (p2.y - p1.y).toDouble()
+  val dz = (p2.z - p1.z).toDouble()
+  return sqrt(dx * dx + dy * dy + dz * dz)
+}
