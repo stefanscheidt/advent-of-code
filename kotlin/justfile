@@ -9,6 +9,10 @@ add-module module:
 list-dependency-updates module="":
   ./gradlew {{module}}:dependencyUpdates
 
+# Opens puzzle of the given day in your browser.
+open-day year day:
+  open https://adventofcode.com/{{year}}/day/{{day}}
+
 # Needs env var AOC_SESSION to be set.
 get-input year day:
   ./scripts/get-input.sh {{year}} {{day}}
