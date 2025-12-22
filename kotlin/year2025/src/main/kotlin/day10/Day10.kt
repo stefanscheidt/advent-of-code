@@ -1,22 +1,42 @@
 package day10
 
 import common.collections.allSublists
-import kotlin.collections.drop
-import kotlin.collections.dropLast
-import kotlin.collections.map
-import kotlin.text.drop
+import kotlin.math.min
 
 // Domain
 
 @JvmInline
-value class Wiring(val wiring: List<Int>) {
+value class Wiring(val values: List<Int>) {
   val intValue: Int
-    get() = wiring.fold(0) { acc, n -> acc + (1 shl n) }
+    get() = values.fold(0) { acc, n -> acc + (1 shl n) }
 }
 
-@JvmInline value class IndicatorLights(val value: Int)
+@JvmInline
+value class IndicatorLights(val value: Int) {
+  companion object {
+    fun fromBits(bits: List<Int>): IndicatorLights =
+      bits.foldIndexed(0) { idx, acc, b -> acc + (b shl idx) }.let(::IndicatorLights)
+  }
+}
 
-@JvmInline value class JoltageRequirement(val requirement: List<Int>)
+@JvmInline
+value class JoltageRequirement(val values: List<Int>) {
+
+  fun allZero(): Boolean = values.all { it == 0 }
+
+  fun toLights(): IndicatorLights =
+    values.map { if (it % 2 == 0) 0 else 1 }.let(IndicatorLights::fromBits)
+
+  fun reduce(buttonPresses: List<Wiring>): JoltageRequirement {
+    val joltageAfterPresses = values.toMutableList()
+    for (wiring in buttonPresses) {
+      for (idx in wiring.values) {
+        joltageAfterPresses[idx] = joltageAfterPresses[idx] - 1
+      }
+    }
+    return JoltageRequirement(joltageAfterPresses)
+  }
+}
 
 data class Machine(
   val wirings: List<Wiring>,
@@ -37,12 +57,7 @@ private fun parseWiring(input: String): Wiring =
   input.drop(1).dropLast(1).split(",").map(String::toInt).let(::Wiring)
 
 fun parseIndicatorLights(input: String): IndicatorLights =
-  input
-    .drop(1)
-    .dropLast(1)
-    .map { (if (it == '#') 1 else 0) }
-    .foldIndexed(0) { idx, acc, b -> acc + (b shl idx) }
-    .let(::IndicatorLights)
+  input.drop(1).dropLast(1).map { (if (it == '#') 1 else 0) }.let(IndicatorLights::fromBits)
 
 fun parseJoltageRequirement(input: String): JoltageRequirement =
   input.drop(1).dropLast(1).split(",").map(String::toInt).let(::JoltageRequirement)
@@ -67,6 +82,33 @@ fun minimumPressesForLights(machine: Machine): Int {
 
 // Part 2
 
-fun part2(input: List<String>): String {
-  return "TODO2"
+fun part2(input: List<String>): String =
+  input.map(::parseMachine).sumOf(::minimumPressesForJoltage).toString()
+
+fun minimumPressesForJoltage(machine: Machine): Int {
+
+  fun go(
+    requirement: JoltageRequirement,
+    possibleLights: Map<IndicatorLights, List<List<Wiring>>>,
+  ): Int? {
+    if (requirement.allZero()) return 0
+
+    var result: Int? = null
+    val candidatePresses = possibleLights[requirement.toLights()] ?: return null
+    for (presses in candidatePresses) {
+      val joltageAfterPresses = requirement.reduce(presses)
+      if (joltageAfterPresses.values.any { it < 0 }) continue
+
+      val halfTargetJoltage = joltageAfterPresses.values.map { it / 2 }.let(::JoltageRequirement)
+      val minimumPressesForHalfJoltage = go(halfTargetJoltage, possibleLights) ?: continue
+      val minimumPressesForJoltage = presses.size + 2 * minimumPressesForHalfJoltage
+
+      result = min(result ?: minimumPressesForJoltage, minimumPressesForJoltage)
+    }
+
+    return result
+  }
+
+  val possibleLights = possibleIndicatorLights(machine.wirings)
+  return go(machine.targetJoltages, possibleLights) ?: 0
 }
