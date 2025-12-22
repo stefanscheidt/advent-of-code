@@ -2,7 +2,6 @@ package day10
 
 import common.io.inputFile
 import common.io.readNonBlankLines
-import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -16,24 +15,6 @@ class Day10Test {
     [.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
     """
       .trimIndent()
-
-  @Test
-  fun `compute all sublists`() {
-    allSublists(emptyList<Int>()) shouldBe listOf(emptyList())
-    allSublists(listOf(1)) shouldBe listOf(emptyList(), listOf(1))
-    allSublists(listOf(1, 2)) shouldBe listOf(emptyList(), listOf(1), listOf(2), listOf(1, 2))
-    allSublists(listOf(1, 2, 3))
-      .shouldContainExactlyInAnyOrder(
-        emptyList(),
-        listOf(1),
-        listOf(2),
-        listOf(3),
-        listOf(1, 2),
-        listOf(1, 3),
-        listOf(2, 3),
-        listOf(1, 2, 3),
-      )
-  }
 
   @Test
   fun `solve part one with sample input`() {

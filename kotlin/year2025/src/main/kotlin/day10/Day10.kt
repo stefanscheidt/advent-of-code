@@ -1,48 +1,72 @@
 package day10
 
+import common.collections.allSublists
+import kotlin.collections.drop
+import kotlin.collections.dropLast
+import kotlin.collections.map
+import kotlin.text.drop
+
+// Domain
+
+@JvmInline
+value class Wiring(val wiring: List<Int>) {
+  val intValue: Int
+    get() = wiring.fold(0) { acc, n -> acc + (1 shl n) }
+}
+
+@JvmInline value class IndicatorLights(val value: Int)
+
+@JvmInline value class JoltageRequirement(val requirement: List<Int>)
+
+data class Machine(
+  val wirings: List<Wiring>,
+  val targetLights: IndicatorLights,
+  val targetJoltages: JoltageRequirement,
+)
+
+fun pressButtons(wirings: List<Wiring>): IndicatorLights =
+  if (wirings.isEmpty()) IndicatorLights(0)
+  else wirings.map(Wiring::intValue).reduce { acc, n -> acc xor n }.let(::IndicatorLights)
+
+fun possibleIndicatorLights(wirings: List<Wiring>): Map<IndicatorLights, List<List<Wiring>>> =
+  wirings.allSublists().groupBy(::pressButtons)
+
+// Parsing
+
+private fun parseWiring(input: String): Wiring =
+  input.drop(1).dropLast(1).split(",").map(String::toInt).let(::Wiring)
+
+fun parseIndicatorLights(input: String): IndicatorLights =
+  input
+    .drop(1)
+    .dropLast(1)
+    .map { (if (it == '#') 1 else 0) }
+    .foldIndexed(0) { idx, acc, b -> acc + (b shl idx) }
+    .let(::IndicatorLights)
+
+fun parseJoltageRequirement(input: String): JoltageRequirement =
+  input.drop(1).dropLast(1).split(",").map(String::toInt).let(::JoltageRequirement)
+
+fun parseMachine(input: String): Machine {
+  val parts = input.split(" ")
+  val wirings = parts.drop(1).dropLast(1).map(::parseWiring)
+  val targetLights = parseIndicatorLights(parts.first())
+  val targetJoltageRequirement = parseJoltageRequirement(parts.last())
+  return Machine(wirings, targetLights, targetJoltageRequirement)
+}
+
 // Part 1
 
 fun part1(input: List<String>): String =
-  input.mapNotNull(::processLine1).sumOf(List<Int>::size).toString()
+  input.map(::parseMachine).sumOf(::minimumPressesForLights).toString()
 
-fun processLine1(line: String): List<Int>? {
-  val machine = line.split(" ")
-  val target = targetAsBits(machine).foldIndexed(0) { idx, acc, b -> acc + (b shl idx) }
-  // If we interpret the button schematics as indexes of bits with value one,
-  // then each button has an Int value `n`. Pressing the button then means apply `xor n`
-  // to the current value of indicator lights (also interpreted as a binary number).
-  // As `xor` is commutative and associative and `n xor n == 0`, it's sufficient
-  // to check only all sublists of the list of button values
-  val buttonValues = buttonSchematics(machine).map(::foldToInt)
-  val sublists = allSublists(buttonValues).sortedBy { it.size }
-  return sublists.filter { it.isNotEmpty() }.find { pressButtons(it) == target }
+fun minimumPressesForLights(machine: Machine): Int {
+  val possibleLights = possibleIndicatorLights(machine.wirings)
+  return possibleLights[machine.targetLights]?.minOf(List<Wiring>::size) ?: 0
 }
-
-private fun targetAsBits(machine: List<String>): List<Int> =
-  machine.first().drop(1).takeWhile { it != ']' }.map { (if (it == '#') 1 else 0) }
-
-private fun buttonSchematics(machine: List<String>): List<List<Int>> =
-  machine.drop(1).dropLast(1).map { it.drop(1).dropLast(1).split(",").map(String::toInt) }
-
-private fun foldToInt(ints: List<Int>): Int = ints.fold(0) { acc, n -> acc + (1 shl n) }
-
-private fun pressButtons(buttonValues: List<Int>): Int = buttonValues.reduce { acc, n -> acc xor n }
 
 // Part 2
 
 fun part2(input: List<String>): String {
   return "TODO2"
-}
-
-// Helper
-
-fun <T> allSublists(list: List<T>): List<List<T>> {
-  if (list.isEmpty()) return listOf(emptyList())
-
-  return buildList {
-    val previous = allSublists(list.dropLast(1))
-    val last = list.last()
-    addAll(previous)
-    addAll(previous.map { it + last })
-  }
 }
