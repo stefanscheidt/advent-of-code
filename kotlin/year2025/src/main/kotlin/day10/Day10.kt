@@ -5,17 +5,17 @@ import kotlin.math.min
 
 // Domain
 
-@JvmInline
-value class Wiring(val values: List<Int>) {
-  val intValue: Int
-    get() = values.fold(0) { acc, n -> acc + (1 shl n) }
+data class Wiring(val values: List<Int>) {
+  val intValue: Int = values.fold(0) { acc, n -> acc + (1 shl n) }
 }
 
-@JvmInline
-value class IndicatorLights(val value: Int) {
+data class IndicatorLights(val value: Int) {
   companion object {
-    fun fromBits(bits: List<Int>): IndicatorLights =
-      bits.foldIndexed(0) { idx, acc, b -> acc + (b shl idx) }.let(::IndicatorLights)
+    fun fromBits(bits: List<Boolean>): IndicatorLights =
+      bits
+        .map { bit -> if (bit) 1 else 0 }
+        .foldIndexed(0) { idx, acc, b -> acc + (b shl idx) }
+        .let(::IndicatorLights)
   }
 }
 
@@ -24,17 +24,16 @@ value class JoltageRequirement(val values: List<Int>) {
 
   fun allZero(): Boolean = values.all { it == 0 }
 
-  fun toLights(): IndicatorLights =
-    values.map { if (it % 2 == 0) 0 else 1 }.let(IndicatorLights::fromBits)
+  fun toLights(): IndicatorLights = values.map { it % 2 != 0 }.let(IndicatorLights::fromBits)
 
-  fun reduce(buttonPresses: List<Wiring>): JoltageRequirement {
+  fun reduce(buttonPresses: List<Wiring>): JoltageRequirement? {
     val joltageAfterPresses = values.toMutableList()
     for (wiring in buttonPresses) {
       for (idx in wiring.values) {
         joltageAfterPresses[idx] = joltageAfterPresses[idx] - 1
       }
     }
-    return JoltageRequirement(joltageAfterPresses)
+    return if (joltageAfterPresses.any { it < 0 }) null else JoltageRequirement(joltageAfterPresses)
   }
 }
 
@@ -57,7 +56,7 @@ private fun parseWiring(input: String): Wiring =
   input.drop(1).dropLast(1).split(",").map(String::toInt).let(::Wiring)
 
 fun parseIndicatorLights(input: String): IndicatorLights =
-  input.drop(1).dropLast(1).map { (if (it == '#') 1 else 0) }.let(IndicatorLights::fromBits)
+  input.drop(1).dropLast(1).map { it == '#' }.let(IndicatorLights::fromBits)
 
 fun parseJoltageRequirement(input: String): JoltageRequirement =
   input.drop(1).dropLast(1).split(",").map(String::toInt).let(::JoltageRequirement)
@@ -96,14 +95,12 @@ fun minimumPressesForJoltage(machine: Machine): Int {
     var result: Int? = null
     val candidatePresses = possibleLights[requirement.toLights()] ?: return null
     for (presses in candidatePresses) {
-      val joltageAfterPresses = requirement.reduce(presses)
-      if (joltageAfterPresses.values.any { it < 0 }) continue
-
+      val joltageAfterPresses = requirement.reduce(presses) ?: continue
       val halfTargetJoltage = joltageAfterPresses.values.map { it / 2 }.let(::JoltageRequirement)
-      val minimumPressesForHalfJoltage = go(halfTargetJoltage, possibleLights) ?: continue
-      val minimumPressesForJoltage = presses.size + 2 * minimumPressesForHalfJoltage
+      val minimumPressesForHalf = go(halfTargetJoltage, possibleLights) ?: continue
+      val minimumPresses = presses.size + 2 * minimumPressesForHalf
 
-      result = min(result ?: minimumPressesForJoltage, minimumPressesForJoltage)
+      result = min(result ?: minimumPresses, minimumPresses)
     }
 
     return result
